@@ -46,7 +46,20 @@ const Home = () => {
     }
   };
 
-  const getNumberOfFiles = async () => {};
+  const getNumberOfFiles = async () => {
+    try {
+      await client
+        .get("/files-count/", {
+          withCredentials: true,
+        })
+        .then((response) => {
+          setFileCount(response.data.file_count);
+        });
+    } catch (err) {
+      notifyError("Error fetching number of files");
+      console.error("Error fetching number of files:", err);
+    }
+  };
 
   useEffect(() => {
     getNumberofUsers();

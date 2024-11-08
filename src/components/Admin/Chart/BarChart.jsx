@@ -1,5 +1,7 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Bar } from "react-chartjs-2";
+import client from "../../../utils/client";
+
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -21,7 +23,41 @@ ChartJS.register(
 );
 
 const BarChart = () => {
-  // Data for bookings and order sales (in PHP)
+  const [monthlyData, setMonthlyData] = useState([]);
+
+  // Fetch data on component mount
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await client.get(`/upload-per-month/`, {
+          withCredentials: true,
+        });
+        setMonthlyData(response.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    fetchData();
+  }, []); // Empty dependency array ensures fetch only runs on mount
+
+  // Array of colors for each month (you can customize this to match your design)
+  const colors = [
+    "rgba(75, 192, 192, 0.6)", // January
+    "rgba(255, 99, 132, 0.6)", // February
+    "rgba(255, 159, 64, 0.6)", // March
+    "rgba(153, 102, 255, 0.6)", // April
+    "rgba(54, 162, 235, 0.6)", // May
+    "rgba(255, 205, 86, 0.6)", // June
+    "rgba(201, 203, 207, 0.6)", // July
+    "rgba(75, 192, 192, 0.6)", // August
+    "rgba(255, 99, 132, 0.6)", // September
+    "rgba(255, 159, 64, 0.6)", // October
+    "rgba(153, 102, 255, 0.6)", // November
+    "rgba(54, 162, 235, 0.6)", // December
+  ];
+
+  // Data for bookings and order sales (can be dynamic if needed)
   const data = {
     labels: [
       "January",
@@ -39,23 +75,10 @@ const BarChart = () => {
     ],
     datasets: [
       {
-        label: "Bookings",
-        data: [
-          120000, 150000, 180000, 100000, 90000, 200000, 160000, 190000, 220000,
-          210000, 180000, 240000,
-        ], // Example data (in PHP)
-        backgroundColor: "rgba(75, 192, 192, 0.6)",
+        label: "Uploads", // You can change the label if needed
+        data: monthlyData.map((item) => item.total_uploads), // Map the uploads count to the data array
+        backgroundColor: monthlyData.map((_, index) => colors[index]), // Assign unique colors to each month
         borderColor: "rgba(75, 192, 192, 1)",
-        borderWidth: 1,
-      },
-      {
-        label: "Order Sales",
-        data: [
-          200000, 230000, 250000, 220000, 180000, 260000, 240000, 290000,
-          310000, 320000, 280000, 340000,
-        ], // Example data (in PHP)
-        backgroundColor: "rgba(153, 102, 255, 0.6)",
-        borderColor: "rgba(153, 102, 255, 1)",
         borderWidth: 1,
       },
     ],
@@ -70,16 +93,15 @@ const BarChart = () => {
       },
       title: {
         display: true,
-        text: "Bookings and Order Sales (January - December)",
+        text: "Total Uploads per Month",
       },
     },
     scales: {
       y: {
         beginAtZero: true,
         ticks: {
-          // Custom callback for formatting values in PHP
           callback: function (value) {
-            return "₱" + value.toLocaleString(); // Format the value as PHP
+            return "₱" + value.toLocaleString(); // Format as PHP currency
           },
         },
       },
