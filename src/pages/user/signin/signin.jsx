@@ -23,36 +23,31 @@ const SignIn = () => {
 
   const onValid = async (data) => {
     try {
-      const url = `${process.env.REACT_APP_API_LINK}/login/`;
-      const response = await client
-        .post(url, data, {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
-        .then((response) => {
-          const data = response.data;
-          const user = data.user;
-          notifySuccess("Sign-in successful!");
-          reset();
-          authenticate(response.data);
+      const response = await client.post("/login/", data, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
-          if (user.is_superuser) {
-            navigate("/admin");
-          } else {
-            navigate("/drive");
-          }
-        })
-        .catch((error) => {
-          if (error.response) {
-            const message = error.response.data[0];
-            notifyError(message);
-            console.log(message);
-          }
-        });
+      const user = response.data.user;
+      notifySuccess("Sign-in successful!");
+      reset();
+      authenticate(response.data);
+
+      if (user.is_superuser) {
+        navigate("/admin");
+      } else {
+        navigate("/drive");
+      }
     } catch (error) {
-      notifyError("Sign-in failed. Please check your credentials.");
-      console.error(error);
+      if (error.response) {
+        const message = error.response.data[0];
+        notifyError(message);
+        console.log(message);
+      } else {
+        notifyError("Sign-in failed. Please check your credentials.");
+        console.error(error);
+      }
     }
   };
 

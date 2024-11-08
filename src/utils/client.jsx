@@ -1,8 +1,12 @@
 import axios from "axios";
 import { getToken, setToken } from "./Helpers";
 
+const isDevelopment = process.env.NODE_ENV === "development";
+const myBaseUrl = isDevelopment
+  ? `${process.env.REACT_APP_API_LINK}`
+  : `${process.env.REACT_APP_BASE_URL_DEPLOY}`;
 const client = axios.create({
-  baseURL: `${process.env.REACT_APP_API_LINK}`,
+  baseURL: myBaseUrl,
   headers: {
     "Content-Type": "application/json",
   },
