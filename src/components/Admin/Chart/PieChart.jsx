@@ -17,12 +17,9 @@ const PieChart = () => {
     const fetchFileData = async () => {
       try {
         // Fetch file data from the backend API
-        const response = await client.get(
-          `${process.env.REACT_APP_API_LINK}/get-files`,
-          {
-            withCredentials: true, // Include credentials (cookies)
-          }
-        );
+        const response = await client.get(`/get-files/`, {
+          withCredentials: true, // Include credentials (cookies)
+        });
         console.log(response.data); // Log the response data to check its structure
 
         // Assuming the backend returns an object with file types as keys and counts as values

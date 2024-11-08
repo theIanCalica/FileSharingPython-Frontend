@@ -46,7 +46,7 @@ const Sidebar = ({ isMinimized }) => {
 
     if (result.isConfirmed) {
       try {
-        await client.post(`${process.env.REACT_APP_API_LINK}/logout/`);
+        await client.post(`/logout/`);
         logout();
         navigate("/");
 
