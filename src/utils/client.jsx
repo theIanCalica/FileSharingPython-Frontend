@@ -6,7 +6,7 @@ const myBaseUrl = isDevelopment
   ? `${process.env.REACT_APP_API_LINK}`
   : `${process.env.REACT_APP_BASE_URL_DEPLOY}`;
 const client = axios.create({
-  baseURL: myBaseUrl,
+  baseURL: `${myBaseUrl}/`,
   headers: {
     "Content-Type": "application/json",
   },
