@@ -32,7 +32,7 @@ const Navbar = () => {
   };
 
   const handleLogoutClick = () => {
-    const url = `${process.env.REACT_APP_API_LINK}/logout/`;
+    const url = `/logout/`;
     Swal.fire({
       title: "Are you sure?",
       text: "You will be logged out of your account!",
