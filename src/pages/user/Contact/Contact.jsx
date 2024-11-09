@@ -86,36 +86,46 @@ const Contact = () => {
         </p>
 
         <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="input-group">
-            <input
-              type="text"
-              placeholder="Your name*"
-              className="input-field"
-              {...register("name", { required: "Name is required" })}
-            />
-            {errors.name && <p className="error">{errors.name.message}</p>}
+          <div className="flex flex-row gap-4 mb-5">
+            <div className="flex flex-col w-full">
+              <input
+                type="text"
+                placeholder="Your name*"
+                className="border p-2 rounded-md mb-1"
+                {...register("name", { required: "Name is required" })}
+              />
+              {errors.name && (
+                <p className="text-red-500 text-sm">{errors.name.message}</p>
+              )}
+            </div>
 
-            <input
-              type="email"
-              placeholder="Your E-mail*"
-              className="input-field"
-              {...register("email", {
-                required: "Email is required",
-                pattern: {
-                  value: /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/,
-                  message: "Enter a valid email",
-                },
-              })}
-            />
-            {errors.email && <p className="error">{errors.email.message}</p>}
+            <div className="flex flex-col w-full mb-0">
+              <input
+                type="email"
+                placeholder="Your E-mail*"
+                className="border p-2 rounded-md mb-1"
+                {...register("email", {
+                  required: "Email is required",
+                  pattern: {
+                    value: /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/,
+                    message: "Enter a valid email",
+                  },
+                })}
+              />
+              {errors.email && (
+                <p className="text-red-500 text-sm">{errors.email.message}</p>
+              )}
+            </div>
           </div>
 
           <textarea
             placeholder="Your message*"
-            className="textarea-field"
+            className="textarea-field mb-1"
             {...register("message", { required: "Message is required" })}
           ></textarea>
-          {errors.message && <p className="error">{errors.message.message}</p>}
+          {errors.message && (
+            <p className="text-red-500">{errors.message.message}</p>
+          )}
 
           <div className="checkbox-group">
             <input
@@ -128,11 +138,10 @@ const Contact = () => {
             <label htmlFor="consent">
               I agree that my submitted data is being collected and stored.
             </label>
-            {errors.consent && (
-              <p className="error">{errors.consent.message}</p>
-            )}
           </div>
-
+          {errors.consent && (
+            <p className="text-red-500">{errors.consent.message}</p>
+          )}
           <button type="submit" className="submit-button">
             Send message
           </button>
