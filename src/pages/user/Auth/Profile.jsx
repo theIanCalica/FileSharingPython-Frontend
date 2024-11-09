@@ -42,10 +42,7 @@ const Profile = () => {
 
   const handleDelete = async (userID) => {
     try {
-      await client.delete(
-        `${process.env.REACT_APP_API_LINK}/users/${userID}/`,
-        { withCredentials: true }
-      );
+      await client.delete(`/users/${userID}/`, { withCredentials: true });
       navigate("/"); // Redirect after successful deletion
       notifySuccess("Account successfully deleted");
     } catch (error) {
@@ -61,7 +58,7 @@ const Profile = () => {
 
       try {
         const response = await client.post(
-          `${process.env.REACT_APP_API_LINK}/profile/change-picture/`,
+          `/profile/change-picture/`,
           formData,
           {
             headers: { "Content-Type": "multipart/form-data" },
@@ -85,7 +82,7 @@ const Profile = () => {
   const onSubmit = async (data) => {
     try {
       await client
-        .put(`${process.env.REACT_APP_API_LINK}/users/${user.id}/`, data, {
+        .put(`/users/${user.id}/`, data, {
           headers: { "Content-Type": "application/json" },
           withCredentials: true,
         })
