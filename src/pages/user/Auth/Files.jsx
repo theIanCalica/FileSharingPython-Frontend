@@ -25,6 +25,7 @@ const Files = () => {
     try {
       const response = await client.get("/files");
       setFiles(response.data);
+      console.log(response.data);
     } catch (error) {
       console.error("Error fetching files:", error);
     }
@@ -248,84 +249,98 @@ const Files = () => {
         style={{ display: "none" }}
         onChange={handleFileChange}
       />
-      <div className="">
-        <table className="min-w-full bg-white shadow-lg rounded-lg">
-          <thead>
-            <tr className="bg-blue-500 text-white text-lg">
-              <th className="py-3 px-6 font-semibold text-left rounded-tl-lg">
-                File Icon
-              </th>
-              <th className="py-3 px-6 font-semibold text-left">File Name</th>
-              <th className="py-3 px-6 font-semibold text-left">Upload Date</th>
-              <th className="py-3 px-6 font-semibold text-left rounded-tr-lg">
-                Actions
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {files.map((file, index) => (
-              <tr
-                key={file.id}
-                className={`border-b transition duration-200 ${
-                  index % 2 === 0 ? "bg-gray-50" : "bg-white"
-                } hover:bg-gray-100`}
-              >
-                <td className="py-4 px-6 flex justify-center items-center">
-                  <img
-                    src={getFileTypeIcon(file.file_type)}
-                    alt="file icon"
-                    className="w-12 h-12"
-                  />
-                </td>
-                <td className="py-4 px-6 text-gray-700">{file.file_name}</td>
-                <td className="py-4 px-6 text-gray-700">
-                  {formatDate(file.upload_date)}
-                </td>
-                <td className="py-4 px-6 text-gray-700">
-                  <div className="relative">
-                    <button
-                      onClick={() => toggleDropdown(file.id)}
-                      className="border border-gray-300 rounded-full p-2 focus:outline-none hover:bg-gray-200 transition duration-200"
-                    >
-                      &#8942;
-                    </button>
-                    {activeDropdown === file.id && (
-                      <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-300 rounded-md shadow-lg z-10">
-                        <button
-                          onClick={() => handleDecrypt(file.id)}
-                          className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 transition duration-200"
-                        >
-                          Decrypt
-                        </button>
-                        <button
-                          className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 transition duration-200"
-                          onClick={() => handleOpenModal(file.id)}
-                        >
-                          Share
-                        </button>
-                        <button
-                          onClick={() => handleDelete(file.id)}
-                          className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 transition duration-200"
-                        >
-                          Delete
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                </td>
+
+      {files.length === 0 ? (
+        <div className="flex flex-col items-center justify-center">
+          <img
+            src="/images/auth/drive.png"
+            alt="No files available"
+            className="mt-3"
+            style={{ width: "480px", height: "480px" }}
+          />
+        </div>
+      ) : (
+        <div>
+          <table className="min-w-full bg-white shadow-lg rounded-lg">
+            <thead>
+              <tr className="bg-blue-500 text-white text-lg">
+                <th className="py-3 px-6 font-semibold text-left rounded-tl-lg">
+                  File Icon
+                </th>
+                <th className="py-3 px-6 font-semibold text-left">File Name</th>
+                <th className="py-3 px-6 font-semibold text-left">
+                  Upload Date
+                </th>
+                <th className="py-3 px-6 font-semibold text-left rounded-tr-lg">
+                  Actions
+                </th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              {files.map((file, index) => (
+                <tr
+                  key={file.id}
+                  className={`border-b transition duration-200 ${
+                    index % 2 === 0 ? "bg-gray-50" : "bg-white"
+                  } hover:bg-gray-100`}
+                >
+                  <td className="py-4 px-6 flex justify-center items-center">
+                    <img
+                      src={getFileTypeIcon(file.file_type)}
+                      alt="file icon"
+                      className="w-12 h-12"
+                    />
+                  </td>
+                  <td className="py-4 px-6 text-gray-700">{file.file_name}</td>
+                  <td className="py-4 px-6 text-gray-700">
+                    {formatDate(file.upload_date)}
+                  </td>
+                  <td className="py-4 px-6 text-gray-700">
+                    <div className="relative">
+                      <button
+                        onClick={() => toggleDropdown(file.id)}
+                        className="border border-gray-300 rounded-full p-2 focus:outline-none hover:bg-gray-200 transition duration-200"
+                      >
+                        &#8942;
+                      </button>
+                      {activeDropdown === file.id && (
+                        <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-300 rounded-md shadow-lg z-10">
+                          <button
+                            onClick={() => handleDecrypt(file.id)}
+                            className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 transition duration-200"
+                          >
+                            Decrypt
+                          </button>
+                          <button
+                            className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 transition duration-200"
+                            onClick={() => handleOpenModal(file.id)}
+                          >
+                            Share
+                          </button>
+                          <button
+                            onClick={() => handleDelete(file.id)}
+                            className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 transition duration-200"
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      {/* Progress bar and modal components */}
       {uploading && (
         <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-gray-500 bg-opacity-50 z-50">
           <div className="bg-white p-8 w-96 rounded-lg shadow-lg">
-            {/* Increased padding and width */}
             <h3 className="text-2xl font-semibold mb-4 text-center">
               Uploading...
-            </h3>{" "}
-            {/* Larger font */}
+            </h3>
             <div className="relative pt-1">
               <div className="overflow-hidden h-4 text-xs flex rounded bg-blue-200">
                 <div
