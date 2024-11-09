@@ -45,7 +45,6 @@ const Contact = () => {
   };
 
   const handleEdit = () => {
-    console.log("Selected Contact:", selectedContact);
     openModal(selectedContact);
     handleMenuClose();
   };
@@ -102,19 +101,7 @@ const Contact = () => {
                         },
                       }}
                     >
-                      <MenuItem
-                        onClick={handleEdit}
-                        style={{
-                          padding: "6px 12px", // Compact padding
-                          fontSize: "0.875rem", // Small font size for a subtle look
-                        }}
-                        onMouseEnter={(e) =>
-                          (e.target.style.backgroundColor = "#f0f0f0")
-                        }
-                        onMouseLeave={(e) =>
-                          (e.target.style.backgroundColor = "transparent")
-                        }
-                      >
+                      <MenuItem onClick={handleEdit}>
                         <EditOutlinedIcon className="mr-2" /> Edit
                       </MenuItem>
                     </Menu>
@@ -129,10 +116,9 @@ const Contact = () => {
       {/* Render ContactModal and pass selectedContact and onClose props */}
       {isModalOpen && (
         <ContactModal
-          open={isModalOpen}
           contact={selectedContact}
           onClose={closeModal}
-          onSuccess={fetchContacts}
+          refresh={fetchContacts}
         />
       )}
     </>

@@ -9,6 +9,8 @@ import UserModal from "../../components/Admin/Modal/UserModal";
 import { Menu, MenuItem, IconButton } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import client from "../../utils/client";
+import { useNavigate } from "react-router-dom";
+
 const UsersPage = () => {
   const [users, setUsers] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -16,6 +18,7 @@ const UsersPage = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedUser, setSelectedUser] = useState(null);
+  const navigate = useNavigate();
 
   const fetchUsers = () => {
     client
@@ -100,13 +103,31 @@ const UsersPage = () => {
         });
     }
   };
+  const redirect_home = () => {
+    navigate("/admin");
+  };
 
+  const redirect_user = () => {
+    navigate("/admin/users");
+  };
   return (
     <div className="px-3 mt-8">
       <div className="flex justify-between">
         <h1 className="font-bold font-serif text-2xl">Users</h1>
-        <p style={{ fontSize: "13.5px" }}>
-          <span className="text-blue-500 hover:underline">Users</span>
+        <p className="text-sm text-gray-500">
+          <span
+            className="text-blue-500 hover:underline cursor-pointer"
+            onClick={redirect_home}
+          >
+            Home
+          </span>
+          /
+          <span
+            className="cursor-pointer hover:underline"
+            onClick={redirect_user}
+          >
+            Users
+          </span>
         </p>
       </div>
       <button
@@ -137,7 +158,6 @@ const UsersPage = () => {
               <th className="py-2 px-4 border-b text-left">First Name</th>
               <th className="py-2 px-4 border-b text-left">Last Name</th>
               <th className="py-2 px-4 border-b text-left">Email</th>
-              <th className="py-2 px-4 border-b text-left">Last Login</th>
               <th className="py-2 px-4 border-b text-left">Role</th>
               <th className="py-2 px-4 border-b text-left">Profile</th>
               <th className="py-2 px-4 border-b text-left">Actions</th>
@@ -150,9 +170,6 @@ const UsersPage = () => {
                 <td className="py-2 px-4 border-b">{user.first_name}</td>
                 <td className="py-2 px-4 border-b">{user.last_name}</td>
                 <td className="py-2 px-4 border-b">{user.email}</td>
-                <td className="py-2 px-4 border-b">
-                  {formatDate(user.last_login)}
-                </td>
                 <td className="py-2 px-4 border-b">
                   {user.is_superuser ? "Admin" : "User"}
                 </td>

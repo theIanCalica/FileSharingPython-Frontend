@@ -1,125 +1,87 @@
-import React, { useEffect } from "react";
-import { useForm, Controller } from "react-hook-form";
-import axios from "axios";
-import Select from "react-select"; // Importing react-select
-import { getUser, notifySuccess, notifyError } from "../../../utils/Helpers";
-import { ToastContainer } from "react-toastify";
-
-const ContactModal = ({ onClose, open, contact, onSuccess }) => {
+import React, { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { getBorderColor } from "../../../utils/Helpers";
+import client from "../../../utils/client";
+const ContactModal = ({ onClose, contact, refresh }) => {
   const {
     register,
     handleSubmit,
     reset,
-    control, // Added for react-select
+    setError,
     formState: { errors, touchedFields },
-  } = useForm();
+  } = useForm({
+    mode: "onchange",
+    defaultValues: {
+      name: "",
+      email: "",
+      message: "",
+    },
+  });
 
   useEffect(() => {
-    console.log("Received contact in Modal:", contact);
-    reset({
-      name: contact?.name || "",
-      email: contact?.email || "",
-      message: contact?.message || "",
-      status: contact?.status || null,
-    });
+    console.log(contact);
+    if (contact) {
+      console.log(contact);
+      reset({
+        name: contact.name,
+        email: contact.email,
+        message: contact.message,
+      });
+    }
   }, [contact, reset]);
 
-  const onSubmit = (data) => {
-    const user = getUser();
-    data.user = user;
-    console.log(data);
-
-    axios
-      .put(`${process.env.REACT_APP_API_LINK}/auth/changePassword`, data, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-      .then((response) => {
-        console.log(response);
-        notifySuccess("Contact updated successfully!");
-        onClose();
-        onSuccess(); // Refresh contact list on success
-      })
-      .catch((error) => {
-        const errorMessage = error.response
-          ? error.response.data.msg
-          : error.message;
-        console.log(errorMessage);
-        notifyError(errorMessage);
-      });
-  };
-
-  // Options for the status select
-  const statusOptions = [
-    { value: "pending", label: "Pending" },
-    { value: "resolved", label: "Resolved" },
-  ];
-
-  if (!open) return null;
+  const onSubmit = (data) => {};
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
-      <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-2xl">
-        <h2 className="text-xl font-bold mb-4">Contact Details</h2>
-        <form onSubmit={handleSubmit(onSubmit)}>
+      <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-4xl">
+        <h2 className="text-xl font-bold mb-4">Edit Contact</h2>
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="grid grid-cols-1 md:grid-cols-2 gap-4"
+        >
           <div className="mb-4">
-            <label htmlFor="name" className="block text-gray-700 mb-2">
-              Name
+            <label htmlFor="fname" className="block text-gray-700 mb-2">
+              First Name
             </label>
             <input
-              id="name"
+              id="fname"
               type="text"
-              readOnly
-              className="w-full px-3 py-2 border rounded-md bg-gray-200"
-              {...register("name")}
+              className={`w-full px-3 py-2 border border-gray-300 rounded-md h-14 ${getBorderColor(
+                "fname",
+                errors,
+                touchedFields
+              )}`}
+              {...register("fname", { required: "First Name is required" })}
             />
+            {errors.fname && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.fname.message}
+              </p>
+            )}
           </div>
           <div className="mb-4">
-            <label htmlFor="email" className="block text-gray-700 mb-2">
-              Email
+            <label htmlFor="lname" className="block text-gray-700 mb-2">
+              Last Name
             </label>
             <input
-              id="email"
-              type="email"
-              readOnly
-              className="w-full px-3 py-2 border rounded-md bg-gray-200"
-              {...register("email")}
+              id="lname"
+              type="text"
+              className={`w-full px-3 py-2 border border-gray-300 rounded-md h-14 ${getBorderColor(
+                "lname",
+                errors,
+                touchedFields
+              )}`}
+              {...register("lname", { required: "Last Name is required" })}
             />
+            {errors.lname && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.lname.message}
+              </p>
+            )}
           </div>
-          <div className="mb-4">
-            <label htmlFor="message" className="block text-gray-700 mb-2">
-              Message
-            </label>
-            <textarea
-              id="message"
-              readOnly
-              className="w-full px-3 py-2 border rounded-md bg-gray-200"
-              {...register("message")}
-            />
-          </div>
-          <div className="mb-4">
-            <label htmlFor="status" className="block text-gray-700 mb-2">
-              Status
-            </label>
-            <Controller
-              name="status"
-              control={control}
-              defaultValue={statusOptions.find(
-                (option) => option.value === contact?.status
-              )}
-              render={({ field }) => (
-                <Select
-                  {...field}
-                  options={statusOptions}
-                  onChange={(selectedOption) =>
-                    field.onChange(selectedOption.value)
-                  }
-                />
-              )}
-            />
-          </div>
-          <div className="flex justify-end">
+
+          <div className="flex justify-end col-span-1 md:col-span-2">
             <button
               type="button"
               onClick={onClose}
@@ -129,14 +91,13 @@ const ContactModal = ({ onClose, open, contact, onSuccess }) => {
             </button>
             <button
               type="submit"
-              className="px-4 py-2 rounded-md font-semibold border-2 text-blue-500 border-blue-500 hover:bg-blue-500 hover:text-white"
+              className="px-4 py-2 rounded-md font-semibold border-2 text-green-500 border-green-500 hover:bg-green-500 hover:text-white"
             >
               Update
             </button>
           </div>
         </form>
       </div>
-      <ToastContainer />
     </div>
   );
 };

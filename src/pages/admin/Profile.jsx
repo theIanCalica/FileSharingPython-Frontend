@@ -45,14 +45,13 @@ const Profile = () => {
             className="text-blue-500 hover:underline cursor-pointer"
             onClick={redirect_home}
           >
-            Home{" "}
+            Home
           </span>
           /
           <span
             className="cursor-pointer hover:underline"
             onClick={redirect_profile}
           >
-            {" "}
             Profile
           </span>
         </p>
