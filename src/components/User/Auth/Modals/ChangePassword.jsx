@@ -21,7 +21,7 @@ const ChangePassword = ({ onClose }) => {
     console.log(data);
 
     client
-      .put(`${process.env.REACT_APP_API_LINK}/change-password/`, data, {
+      .put(`/change-password/`, data, {
         headers: {
           "Content-Type": "application/json",
         },
