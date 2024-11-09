@@ -1,13 +1,8 @@
 import React, { useState } from "react";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import GroupIcon from "@mui/icons-material/Group";
-import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import FastfoodIcon from "@mui/icons-material/Fastfood";
-import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import PersonIcon from "@mui/icons-material/Person";
 import LogoutIcon from "@mui/icons-material/Logout";
-import AssignmentIcon from "@mui/icons-material/Assignment";
 import { Link, useNavigate } from "react-router-dom";
 import { logout } from "../../../utils/Helpers";
 import client from "../../../utils/client";
@@ -70,24 +65,16 @@ const Sidebar = ({ isMinimized }) => {
       style={{ backgroundColor: "white" }}
     >
       {!isMinimized && (
-        <div className="p-4 text-xl font-bold font-serif flex flex-row justify-center items-center -ml-2">
-          <img
-            src="/images/logoTransparent.png"
-            alt="Cinemax"
-            className="w-12 mr-3"
-          />
-          Cinemax
+        <div className="p-4 text-xl font-bold text-blue-500 font-serif flex flex-row justify-center items-center -ml-2">
+          <img src="/images/logo.png" alt="Fileguard" className="w-12 mr-3" />
+          Fileguard
         </div>
       )}
 
       {/* Image displayed when minimized */}
       {isMinimized && (
         <div className="p-4 flex justify-center items-center">
-          <img
-            src="/images/logoTransparent.png"
-            alt="Cinemax"
-            className="ml-6"
-          />
+          <img src="/images/logo.png" alt="Fileguard" className="ml-3" />
         </div>
       )}
       <ul className="mt-5 text-xs">

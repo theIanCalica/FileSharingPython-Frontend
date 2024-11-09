@@ -27,7 +27,7 @@ const Sidebar = () => {
       console.error(error.message);
     }
   };
-  // Fetch total file size on component mount
+
   useEffect(() => {
     fetchTotalSize();
   }, []);
@@ -213,9 +213,17 @@ const Sidebar = () => {
         >
           Storage
         </Button>
-        <Typography variant="body2" style={{ color: "gray", padding: "5px 0" }}>
-          {`${(totalSize / (1024 * 1024)).toFixed(2)} MB of 15 GB used`}
-        </Typography>
+        <div style={{ padding: "5px 0" }}>
+          <Typography
+            variant="body2"
+            style={{
+              color: "#808080", // Custom color for total space text
+              paddingTop: "5px",
+            }}
+          >
+            {`${(totalSize / (1024 * 1024)).toFixed(2)} MB of 15 GB used`}
+          </Typography>
+        </div>
         <div
           style={{
             height: "5px",
@@ -226,7 +234,10 @@ const Sidebar = () => {
         >
           <div
             style={{
-              width: `${(totalSize / (15 * 1024 * 1024 * 1024)) * 100}%`,
+              width: `${Math.max(
+                (totalSize / (15 * 1024 * 1024 * 1024)) * 100,
+                1
+              )}%`,
               height: "100%",
               backgroundColor: "#1a73e8",
             }}

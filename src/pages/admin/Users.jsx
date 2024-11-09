@@ -6,10 +6,9 @@ import "react-toastify/dist/ReactToastify.css";
 import Swal from "sweetalert2";
 import { notifyError, notifySuccess, formatDate } from "../../utils/Helpers";
 import UserModal from "../../components/Admin/Modal/UserModal";
-import axios from "axios";
 import { Menu, MenuItem, IconButton } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import NoAccountsIcon from "@mui/icons-material/NoAccounts";
+import client from "../../utils/client";
 const UsersPage = () => {
   const [users, setUsers] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -19,8 +18,8 @@ const UsersPage = () => {
   const [selectedUser, setSelectedUser] = useState(null);
 
   const fetchUsers = () => {
-    axios
-      .get(`${process.env.REACT_APP_API_LINK}/users`)
+    client
+      .get(`/users`)
       .then((response) => {
         console.log(response.data);
         setUsers(response.data);
@@ -70,74 +69,6 @@ const UsersPage = () => {
     fetchUsers();
   }, []);
 
-  const handleDeactivate = async (userID) => {
-    const result = await Swal.fire({
-      title: "Are you sure?",
-      text: "Deactivating this user will restrict their access. You can reactivate the account at any time.",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, deactivate it!",
-      cancelButtonText: "Cancel",
-    });
-
-    if (result.isConfirmed) {
-      axios
-        .put(`${process.env.REACT_APP_API_LINK}/users/deactivate/${userID}`)
-        .then((response) => {
-          if (response.status === 200) {
-            notifySuccess("Successfully deactivated");
-            setUsers((prevUsers) =>
-              prevUsers.map((user) =>
-                user._id === userID ? { ...user, status: "Deactivated" } : user
-              )
-            );
-          } else {
-            notifyError("Deactivation Unsuccessful");
-          }
-        })
-        .catch((error) => {
-          notifyError("Something went wrong");
-          console.error(error.message);
-        });
-    }
-  };
-
-  const handleActivate = async (userID) => {
-    const result = await Swal.fire({
-      title: "Are you sure?",
-      text: "Activating this user will restore their access.",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, activate it!",
-      cancelButtonText: "Cancel",
-    });
-
-    if (result.isConfirmed) {
-      axios
-        .put(`${process.env.REACT_APP_API_LINK}/users/activate/${userID}`)
-        .then((response) => {
-          if (response.status === 200) {
-            notifySuccess("Successfully activated");
-            setUsers((prevUsers) =>
-              prevUsers.map((user) =>
-                user._id === userID ? { ...user, status: "activated" } : user
-              )
-            );
-          } else {
-            notifyError("Activation Unsuccessful");
-          }
-        })
-        .catch((error) => {
-          notifyError("Something went wrong");
-          console.error(error.message);
-        });
-    }
-  };
-
   const handleDelete = async (userID) => {
     const result = await Swal.fire({
       title: "Are you sure?",
@@ -151,8 +82,8 @@ const UsersPage = () => {
     });
 
     if (result.isConfirmed) {
-      axios
-        .delete(`${process.env.REACT_APP_API_LINK}/users/${userID}/`)
+      client
+        .delete(`/users/${userID}/`)
         .then((response) => {
           if (response.status === 204) {
             notifySuccess("Successfully Deleted");
@@ -256,17 +187,6 @@ const UsersPage = () => {
                     <MenuItem onClick={handleEdit}>
                       <EditOutlinedIcon className="mr-2" /> Edit
                     </MenuItem>
-                    {selectedUser?.is_active === "activated" ? (
-                      <MenuItem
-                        onClick={() => handleDeactivate(selectedUser.id)}
-                      >
-                        <NoAccountsIcon className="mr-2" /> Deactivate
-                      </MenuItem>
-                    ) : (
-                      <MenuItem onClick={() => handleActivate(selectedUser.id)}>
-                        <NoAccountsIcon className="mr-2" /> Activate
-                      </MenuItem>
-                    )}
                     <MenuItem onClick={() => handleDelete(selectedUser.id)}>
                       <DeleteOutlineOutlinedIcon className="mr-2" /> Delete
                     </MenuItem>
