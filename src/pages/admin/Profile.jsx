@@ -1,17 +1,26 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { getUser, formatDate, getProfile } from "../../utils/Helpers";
+import {
+  getUser,
+  getProfile,
+  notifySuccess,
+  notifyError,
+  setProfile,
+} from "../../utils/Helpers";
 import ProfileModal from "../../components/Admin/Modal/Profile";
 import ChangePasswordModal from "../../components/Admin/Modal/ChangePasswordModal";
 import { useNavigate } from "react-router-dom";
+import client from "../../utils/client";
 const Profile = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
   const user = getUser();
-  const profile = getProfile();
+  const [profile, setProfileState] = useState(getProfile());
   const navigate = useNavigate();
+  const fileInputRef = useRef(null);
+
   const handleEditProfile = () => {
     setIsModalOpen(true);
   };
@@ -35,6 +44,35 @@ const Profile = () => {
   const redirect_profile = () => {
     navigate("/admin/profile");
   };
+
+  const openFileExplorer = () => {
+    fileInputRef.current.click();
+  };
+
+  const handleImageChange = async (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const formData = new FormData();
+      formData.append("profile_picture", file);
+
+      try {
+        const response = await client.post(
+          `/profile/change-picture/`,
+          formData,
+          {
+            headers: { "Content-Type": "multipart/form-data" },
+            withCredentials: true,
+          }
+        );
+        setProfileState({ ...profile, url: response.data.profile.url });
+        setProfile(response.data);
+        window.location.reload();
+        notifySuccess("Profile picture updated!");
+      } catch (error) {
+        notifyError("Failed to update profile picture.");
+      }
+    }
+  };
   return (
     <div className="container mx-auto mt-8">
       {/* Page Header */}
@@ -45,13 +83,14 @@ const Profile = () => {
             className="text-blue-500 hover:underline cursor-pointer"
             onClick={redirect_home}
           >
-            Home
+            Home{" "}
           </span>
           /
           <span
             className="cursor-pointer hover:underline"
             onClick={redirect_profile}
           >
+            {" "}
             Profile
           </span>
         </p>
@@ -61,12 +100,26 @@ const Profile = () => {
       <div className="bg-white rounded-lg shadow-md p-8">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-6">
-            {/* Profile Image */}
-            <img
-              src={profile.url}
-              alt="Profile"
-              className="rounded-full w-32 h-32 object-cover"
-            />
+            <div className="relative mb-6">
+              {/* Profile Image */}
+              <img
+                src={profile.url}
+                alt="Profile"
+                className="rounded-full w-32 h-32 object-cover"
+              />
+              <i
+                className="fi fi-tr-camera text-white bg-blue-500 rounded-full p-2 absolute bottom-2 left-1/2 transform -translate-x-1/2 text-base shadow-lg cursor-pointer"
+                onClick={openFileExplorer}
+              ></i>
+              <input
+                type="file"
+                ref={fileInputRef}
+                style={{ display: "none" }}
+                accept="image/*"
+                onChange={handleImageChange}
+              />
+            </div>
+
             {/* User Details */}
             <div className="text-xl">
               <h2 className="text-2xl font-semibold">
