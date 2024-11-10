@@ -101,7 +101,7 @@ const BarChart = () => {
         beginAtZero: true,
         ticks: {
           callback: function (value) {
-            return "₱" + value.toLocaleString(); // Format as PHP currency
+            return value.toLocaleString();
           },
         },
       },

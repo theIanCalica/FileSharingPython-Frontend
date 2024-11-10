@@ -101,15 +101,6 @@ const Home = () => {
 
       <div className="container mt-5 bg-white p-4 shadow-md rounded-lg">
         <BarChart />
-
-        <div className="flex justify-between items-center mt-4">
-          <div className="text-blue-500 cursor-pointer hover:underline">
-            View More
-          </div>
-          <button className="bg-transparent border border-green-500 text-green-500 px-4 py-2 rounded hover:bg-green-500 hover:text-white transition-colors duration-300">
-            Download Report
-          </button>
-        </div>
       </div>
 
       {/* Container for BarChart, LineChart, and PieChart */}
