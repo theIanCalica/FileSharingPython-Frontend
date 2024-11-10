@@ -12,7 +12,7 @@ const ResetPassword = () => {
   const onSubmit = (data) => {
     console.log(data);
     client
-      .post(`${process.env.REACT_APP_API_LINK}/reset-password-request`, data)
+      .post(`/reset-password-request`, data)
       .then((response) => {
         notifySuccess(response.data.message);
       })

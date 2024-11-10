@@ -45,13 +45,10 @@ const NewPassword = () => {
     if (password === confirm_password) {
       try {
         // Send new password to your API
-        const response = await client.post(
-          `${process.env.REACT_APP_API_LINK}/reset-password/`,
-          {
-            user_id: userId, // User ID from the token
-            password: password, // New password
-          }
-        );
+        const response = await client.post(`/reset-password/`, {
+          user_id: userId, // User ID from the token
+          password: password, // New password
+        });
         notifySuccess(response.data.message); // Notify success
         navigate("/signin");
       } catch (error) {
