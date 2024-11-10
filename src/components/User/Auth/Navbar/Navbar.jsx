@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import SearchIcon from "@mui/icons-material/Search";
 import client from "../../../../utils/client";
 import {
@@ -12,12 +11,53 @@ import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { IconButton } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
+import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
+import Joyride from "react-joyride";
 
 const Navbar = () => {
   const profile = getProfile();
   const navigate = useNavigate();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false); // State for mobile menu
+  const [run, setRun] = useState(false);
+
+  // Tour steps
+  const steps = [
+    {
+      target: ".help-button", // Target the Help button
+      content: "Click here to get help!",
+    },
+    {
+      target: ".profile-button",
+      content:
+        "Here is your profile where you can click your profile or logout",
+    },
+    {
+      target: ".sidebar",
+      content: "Here is your sidebar where you can access various resources",
+    },
+    {
+      target: ".new",
+      content: "Here is a button you can use to upload files",
+    },
+    {
+      target: ".main-dashboard",
+      content: "Here is a button to redirect you to your dashboard",
+    },
+    {
+      target: ".myDrive",
+      content: "Here is a button to redirect you to the users page list",
+    },
+    {
+      target: ".shared",
+      content: "Here is a button to redirect you to the shared files page",
+    },
+  ];
+
+  const handleHelpClick = () => {
+    setRun(true);
+    setTimeout(() => setRun(true), 200);
+  };
 
   const toggleDropdown = () => {
     setDropdownOpen((prev) => !prev);
@@ -105,8 +145,10 @@ const Navbar = () => {
 
         {/* User Actions */}
         <div style={{ display: "flex", alignItems: "center", gap: "15px" }}>
-          <HelpOutlineIcon style={{ color: "gray", cursor: "pointer" }} />
-          <div style={{ position: "relative" }}>
+          <button onClick={handleHelpClick} className="help-button">
+            <HelpOutlineIcon style={{ color: "gray", cursor: "pointer" }} />
+          </button>
+          <div style={{ position: "relative" }} className="profile-button">
             <img
               src={profile.url}
               alt="User Avatar"
@@ -187,6 +229,31 @@ const Navbar = () => {
           </div>
         </div>
       )}
+
+      <Joyride
+        steps={steps}
+        run={run}
+        continuous
+        showSkipButton
+        showProgress
+        spotlightClicks={true}
+        callback={(data) => {
+          const { status, step, action } = data;
+          if (status === "finished" || status === "skipped") {
+            setRun(false); // Stop the tour once it's finished or skipped
+          }
+
+          // Check if the action is moving to the step targeting the dashboard
+          if (step.target === ".dashboard" && action === "next") {
+            navigate("/admin"); // Redirect to the dashboard page
+          }
+        }}
+        styles={{
+          options: {
+            zIndex: 10000, // Ensure it appears above other elements
+          },
+        }}
+      />
     </>
   );
 };

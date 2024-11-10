@@ -100,7 +100,7 @@ const Sidebar = () => {
   };
 
   return (
-    <div style={{ width: "250px", padding: "10px" }}>
+    <div style={{ width: "250px", padding: "10px" }} className="sidebar">
       <div
         className="flex-col mt-10 cursor-pointer"
         style={{ display: "flex", alignItems: "center", marginBottom: "20px" }}
@@ -113,6 +113,7 @@ const Sidebar = () => {
       </div>
 
       <Button
+        className="new"
         variant="contained"
         style={{
           backgroundColor: "#5A6AFF",
@@ -167,6 +168,7 @@ const Sidebar = () => {
 
       <div style={{ marginBottom: "20px" }}>
         <Button
+          className="main-dashboard"
           startIcon={<HomeIcon />}
           onClick={handleHomeClick}
           style={{
@@ -178,6 +180,7 @@ const Sidebar = () => {
           Home
         </Button>
         <Button
+          className="myDrive"
           startIcon={<DescriptionIcon />}
           onClick={handleMyDriveClick}
           style={{
@@ -189,6 +192,7 @@ const Sidebar = () => {
           My Drive
         </Button>
         <Button
+          className="shared"
           startIcon={<PeopleIcon />}
           onClick={handleSharedClick}
           style={{
