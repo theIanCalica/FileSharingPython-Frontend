@@ -25,10 +25,6 @@ const Navbar = ({ toggleSidebar }) => {
       content: "Click here to get help!",
     },
     {
-      target: ".email-button", // Example: Target profile button
-      content: "Here is where you can send email",
-    },
-    {
       target: ".profile-button",
       content:
         "Here is your profile where you can click your profile or logout",
@@ -124,12 +120,6 @@ const Navbar = ({ toggleSidebar }) => {
           <button className="text-black help-button" onClick={handleHelpClick}>
             <HelpOutlineIcon />
           </button>
-          <NavLink to={"/admin/email"}>
-            <button className="text-black email-button">
-              <EmailOutlinedIcon style={{ fontSize: "20px" }} />
-            </button>
-          </NavLink>
-
           <div className="relative">
             <button
               onClick={toggleProfileDropdown}
