@@ -83,10 +83,9 @@ const Home = () => {
         </div>
       )}
       <div className="grid gap-4 p-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-        <Widget type="User" count={6} />
-        <Widget type="Contact" count={91} />
-        <Widget type="File" count={34} />
-        {/* Add more widgets as needed */}
+        <Widget type="User" count={userCount} />
+        <Widget type="Contact" count={contactCount} />
+        <Widget type="File" count={fileCount} />
       </div>
 
       <div className="mt-8 bg-white p-4 shadow-md rounded-lg">
