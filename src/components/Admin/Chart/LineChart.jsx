@@ -86,6 +86,7 @@ const LineChart = () => {
   // Chart options
   const options = {
     responsive: true,
+    maintainAspectRatio: false, // Important for responsiveness
     plugins: {
       legend: {
         position: "top",
@@ -115,7 +116,7 @@ const LineChart = () => {
   };
 
   return (
-    <div className="chart-container">
+    <div className="chart-container w-full h-96 md:h-[500px] lg:h-[600px] p-4 bg-white rounded-lg">
       <Line data={data} options={options} />
     </div>
   );

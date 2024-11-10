@@ -87,6 +87,7 @@ const BarChart = () => {
   // Chart options with currency formatting
   const options = {
     responsive: true,
+    maintainAspectRatio: false, // Important for responsiveness
     plugins: {
       legend: {
         position: "top",
@@ -109,7 +110,7 @@ const BarChart = () => {
   };
 
   return (
-    <div className="chart-container">
+    <div className="chart-container w-full h-96 md:h-[500px] lg:h-[600px] p-4 bg-white rounded-lg">
       <Bar data={data} options={options} />
     </div>
   );

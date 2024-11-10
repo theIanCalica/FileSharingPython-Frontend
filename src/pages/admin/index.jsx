@@ -29,17 +29,10 @@ const Home = () => {
 
   const getNumberOfContact = async () => {
     try {
-      await client
-        .get(`/contact-count/`, {
-          withCredentials: true,
-        })
-        .then((response) => {
-          setContactCount(response.data.contact_count);
-        })
-        .catch((err) => {
-          notifyError("Error fetching number of contacts");
-          console.error("Error fetching number of contacts:", err);
-        });
+      const response = await client.get(`/contact-count/`, {
+        withCredentials: true,
+      });
+      setContactCount(response.data.contact_count);
     } catch (err) {
       notifyError("Error fetching number of contacts");
       console.error("Error fetching number of contacts:", err);
@@ -48,13 +41,10 @@ const Home = () => {
 
   const getNumberOfFiles = async () => {
     try {
-      await client
-        .get("/files-count/", {
-          withCredentials: true,
-        })
-        .then((response) => {
-          setFileCount(response.data.file_count);
-        });
+      const response = await client.get("/files-count/", {
+        withCredentials: true,
+      });
+      setFileCount(response.data.file_count);
     } catch (err) {
       notifyError("Error fetching number of files");
       console.error("Error fetching number of files:", err);
@@ -72,8 +62,8 @@ const Home = () => {
   }, [loggedIn]);
 
   return (
-    <div className="dashboard">
-      <h1 className="text-2xl font-bold">Dashboard</h1>
+    <div className="container mx-auto px-4 py-8">
+      <h1 className="text-2xl md:text-3xl font-bold text-left">Dashboard</h1>
 
       {showWelcome && (
         <div className="mt-5 bg-green-100 border border-green-200 text-green-800 p-4 shadow-md rounded-lg relative">
@@ -83,37 +73,36 @@ const Home = () => {
           >
             &times;
           </button>
-          <h2 className="text-xl font-semibold">
+          <h2 className="text-lg md:text-xl font-semibold text-center md:text-left">
             Welcome, {user ? user.first_name + " " + user.last_name : "User"}!
           </h2>
-          <p className="mt-2">
+          <p className="mt-2 text-center md:text-left">
             We are glad to have you on board. This is your admin dashboard where
             you can manage all aspects of the application.
           </p>
         </div>
       )}
-
-      <div className="flex mt-5 justify-between items-center">
-        <Widget type="User" count={userCount} />
-        <Widget type="Contact" count={contactCount} />
-        <Widget type="File" count={fileCount} />
+      <div className="grid gap-4 p-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+        <Widget type="User" count={6} />
+        <Widget type="Contact" count={91} />
+        <Widget type="File" count={34} />
+        {/* Add more widgets as needed */}
       </div>
 
-      <div className="container mt-5 bg-white p-4 shadow-md rounded-lg">
+      <div className="mt-8 bg-white p-4 shadow-md rounded-lg">
         <BarChart />
       </div>
 
-      {/* Container for BarChart, LineChart, and PieChart */}
-      <div className="flex flex-wrap container mt-5 gap-5   rounded-lg w-full ">
-        <div className="flex-grow basis-1/3 min-w-[300px] p-4 bg-white shadow rounded-lg">
+      <div className="flex flex-wrap gap-5 mt-5 justify-center">
+        <div className="flex-grow basis-full md:basis-1/2 lg:basis-1/3 p-4 bg-white shadow-md rounded-lg min-w-[250px]">
           <Map />
         </div>
-        <div className="flex-grow basis-1/3 min-w-[300px] justify-center items-center p-4 bg-white shadow rounded-lg">
+        <div className="flex-grow basis-full md:basis-1/2 lg:basis-1/3 p-4 bg-white shadow-md rounded-lg min-w-[250px]">
           <PieChart />
         </div>
       </div>
 
-      <div className="container mt-5 bg-white p-4 shadow-md rounded-lg">
+      <div className="mt-5 bg-white p-4 shadow-md rounded-lg">
         <LineChart />
       </div>
     </div>
