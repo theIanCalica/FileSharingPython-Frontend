@@ -117,9 +117,7 @@ const UserModal = ({
 
     console.log(user);
 
-    const url = isEditing
-      ? `${process.env.REACT_APP_API_LINK}/users/${userToEdit._id}/`
-      : `${process.env.REACT_APP_API_LINK}/users/`;
+    const url = isEditing ? `/users/${userToEdit._id}/` : `/register/`;
     const method = isEditing ? "PUT" : "POST";
     client({
       method,
@@ -136,6 +134,7 @@ const UserModal = ({
           isEditing ? "User updated successfully" : "User created successfully"
         );
         onClose();
+        console.log(response);
       })
       .catch((error) => {
         notifyError(isEditing ? "Error updating user" : "Error creating user");

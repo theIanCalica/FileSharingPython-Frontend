@@ -24,7 +24,6 @@ const UsersPage = () => {
     client
       .get(`/users`)
       .then((response) => {
-        console.log(response.data);
         setUsers(response.data);
       })
       .catch((err) => {
@@ -213,7 +212,6 @@ const UsersPage = () => {
           </tbody>
         </table>
       </div>
-      <ToastContainer />
     </div>
   );
 };
