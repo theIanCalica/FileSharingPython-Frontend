@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Menu } from "@mui/icons-material";
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import KeyboardArrowDownOutlinedIcon from "@mui/icons-material/KeyboardArrowDownOutlined";
@@ -13,8 +13,6 @@ import Joyride from "react-joyride";
 
 const Navbar = ({ toggleSidebar }) => {
   const navigate = useNavigate();
-  const [searchTerm, setSearchTerm] = useState("");
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
   const user = getUser();
   const profile = getProfile();
@@ -25,7 +23,6 @@ const Navbar = ({ toggleSidebar }) => {
     {
       target: ".help-button", // Target the Help button
       content: "Click here to get help!",
-      disableOverlay: true,
     },
     {
       target: ".email-button", // Example: Target profile button
@@ -38,7 +35,7 @@ const Navbar = ({ toggleSidebar }) => {
     },
     {
       target: ".sidebar-dashboard",
-      content: "Here is your sidebar where you can accell various resources",
+      content: "Here is your sidebar where you can access various resources",
     },
     {
       target: ".main-dashboard",
@@ -175,9 +172,14 @@ const Navbar = ({ toggleSidebar }) => {
         showProgress
         spotlightClicks={true}
         callback={(data) => {
-          const { status } = data;
+          const { status, step, action } = data;
           if (status === "finished" || status === "skipped") {
             setRun(false); // Stop the tour once it's finished or skipped
+          }
+
+          // Check if the action is moving to the step targeting the dashboard
+          if (step.target === ".dashboard" && action === "next") {
+            navigate("/admin"); // Redirect to the dashboard page
           }
         }}
         styles={{

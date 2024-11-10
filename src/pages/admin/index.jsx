@@ -72,7 +72,7 @@ const Home = () => {
   }, [loggedIn]);
 
   return (
-    <div>
+    <div className="dashboard">
       <h1 className="text-2xl font-bold">Dashboard</h1>
 
       {showWelcome && (
