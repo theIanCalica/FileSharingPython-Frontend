@@ -113,6 +113,7 @@ const Sidebar = () => {
       </div>
 
       <Button
+        className="new"
         variant="contained"
         style={{
           backgroundColor: "#5A6AFF",
@@ -191,6 +192,7 @@ const Sidebar = () => {
           My Drive
         </Button>
         <Button
+          className="shared"
           startIcon={<PeopleIcon />}
           onClick={handleSharedClick}
           style={{

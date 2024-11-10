@@ -52,6 +52,10 @@ const Navbar = () => {
       target: ".shared",
       content: "Here is a button to redirect you to the shared files page",
     },
+    {
+      target: ".totalspace",
+      content: "Here you can see the available space for your drive",
+    },
   ];
 
   const handleHelpClick = () => {
