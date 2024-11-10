@@ -1,6 +1,5 @@
 import React, { useState, useRef } from "react";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
-import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {
   getUser,
@@ -177,7 +176,6 @@ const Profile = () => {
         </div>
       </div>
 
-      <ToastContainer />
       {isModalOpen && (
         <ProfileModal
           isOpen={isModalOpen}

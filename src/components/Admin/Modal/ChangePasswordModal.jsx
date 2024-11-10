@@ -1,13 +1,18 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import client from "../../../utils/client";
-import { getUser, notifyError, getBorderColor } from "../../../utils/Helpers";
-import { ToastContainer } from "react-toastify";
+import {
+  getUser,
+  notifyError,
+  getBorderColor,
+  notifySuccess,
+} from "../../../utils/Helpers";
 
 const ChangePassword = ({ onClose }) => {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors, touchedFields },
   } = useForm();
 
@@ -24,7 +29,9 @@ const ChangePassword = ({ onClose }) => {
         withCredentials: true,
       })
       .then((response) => {
-        console.log(response);
+        reset();
+        onClose();
+        notifySuccess("Your password has been successfully changed!");
       })
       .catch((error) => {
         if (error.response) {
@@ -132,7 +139,6 @@ const ChangePassword = ({ onClose }) => {
           </div>
         </form>
       </div>
-      <ToastContainer />
     </div>
   );
 };

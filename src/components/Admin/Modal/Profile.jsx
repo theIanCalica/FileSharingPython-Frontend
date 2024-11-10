@@ -1,56 +1,62 @@
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import client from "../../../utils/client";
+import { notifyError, notifySuccess, setUser } from "../../../utils/Helpers";
 
-const Profile = ({
-  onClose,
-  notifySuccess,
-  notifyError,
-  user,
-  isEditing,
-  refresh,
-}) => {
-  const checkUnique = async (value, field) => {
-    try {
-      const response = await client.put(
-        `${process.env.REACT_APP_API_LINK}/users/check-unique/`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ [field]: value }),
-        }
-      );
-      const data = await response.json();
-      return data.isUnique;
-    } catch (error) {
-      console.error("Error checking uniqueness:", error);
-      return false;
-    }
-  };
-
+const Profile = ({ onClose, user, refresh }) => {
   const {
     register,
     handleSubmit,
     reset,
     setError,
+    watch,
     formState: { errors, touchedFields },
   } = useForm({
     mode: "onChange",
     defaultValues: {
-      fname: "",
-      lname: "",
+      first_name: "",
+      last_name: "",
       email: "",
       username: "",
     },
   });
+  const username = watch("username");
+  const email = watch("email");
+  const checkUniqueness = async () => {
+    if (username) {
+      const response = await client.get("/check-unique/", {
+        params: { username },
+      });
+      setIsUsernameUnique(response.data.is_username_unique);
+      if (!response.data.is_username_unique) {
+        setError("username", {
+          type: "manual",
+          message: "Username already exists",
+        });
+      }
+    }
+  };
+
+  const checkEmailUniqueness = async () => {
+    if (email) {
+      const response = await client.get("/check-unique/", {
+        params: { email },
+      });
+      setIsEmailUnique(response.data.is_email_unique);
+      if (!response.data.is_email_unique) {
+        setError("email", {
+          type: "manual",
+          message: "Email already exists",
+        });
+      }
+    }
+  };
 
   useEffect(() => {
     if (user) {
       reset({
-        fname: user.first_name,
-        lname: user.last_name,
+        first_name: user.first_name,
+        last_name: user.last_name,
         email: user.email,
         username: user.username,
       });
@@ -60,23 +66,23 @@ const Profile = ({
   const [isEmailUnique, setIsEmailUnique] = useState(true);
   const [isUsernameUnique, setIsUsernameUnique] = useState(true);
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     if (!isEmailUnique || !isUsernameUnique) {
       notifyError("Email or Username must be unique");
       return;
     }
 
     const userData = {
-      fname: data.fname,
-      lname: data.lname,
+      first_name: data.first_name,
+      last_name: data.last_name,
       email: data.email,
       username: data.username,
     };
 
-    const url = `${process.env.REACT_APP_API_LINK}/users/${user._id}`;
+    const url = `/users/${user.id}`;
     const method = "PUT";
 
-    client({
+    await client({
       method,
       url,
       headers: {
@@ -86,14 +92,13 @@ const Profile = ({
       withCredentials: true,
     })
       .then((response) => {
-        refresh();
-        notifySuccess(
-          isEditing ? "User updated successfully" : "User created successfully"
-        );
+        setUser(response.data);
+        window.location.reload();
+        notifySuccess("User updated successfully");
         onClose();
       })
       .catch((error) => {
-        notifyError(isEditing ? "Error updating user" : "Error creating user");
+        notifyError("Something went wrong");
         console.error(error.response ? error.response.data : error.message);
       });
   };
@@ -107,34 +112,36 @@ const Profile = ({
           className="grid grid-cols-1 md:grid-cols-2 gap-4"
         >
           <div className="mb-4">
-            <label htmlFor="fname" className="block text-gray-700 mb-2">
+            <label htmlFor="first_name" className="block text-gray-700 mb-2">
               First Name
             </label>
             <input
-              id="fname"
+              id="first_name"
               type="text"
               className="w-full px-3 py-2 border border-gray-300 rounded-md h-14"
-              {...register("fname", { required: "First Name is required" })}
+              {...register("first_name", {
+                required: "First Name is required",
+              })}
             />
-            {errors.fname && (
+            {errors.first_name && (
               <p className="text-red-500 text-sm mt-1">
-                {errors.fname.message}
+                {errors.first_name.message}
               </p>
             )}
           </div>
           <div className="mb-4">
-            <label htmlFor="lname" className="block text-gray-700 mb-2">
+            <label htmlFor="last_name" className="block text-gray-700 mb-2">
               Last Name
             </label>
             <input
-              id="lname"
+              id="last_name"
               type="text"
               className="w-full px-3 py-2 border border-gray-300 rounded-md h-14"
-              {...register("lname", { required: "Last Name is required" })}
+              {...register("last_name", { required: "Last Name is required" })}
             />
-            {errors.lname && (
+            {errors.last_name && (
               <p className="text-red-500 text-sm mt-1">
-                {errors.lname.message}
+                {errors.last_name.message}
               </p>
             )}
           </div>
@@ -165,18 +172,6 @@ const Profile = ({
               type="email"
               {...register("email", {
                 required: "Email is required",
-                validate: async (value) => {
-                  const isUnique = await checkUnique(value, "email");
-                  if (!isUnique) {
-                    setError("email", {
-                      type: "manual",
-                      message: "Email is already in use",
-                    });
-                    return false;
-                  } else {
-                    return true;
-                  }
-                },
                 pattern: {
                   value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
                   message: "Please enter a valid email",
