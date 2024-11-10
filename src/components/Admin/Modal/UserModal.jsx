@@ -43,6 +43,7 @@ const UserModal = ({
     reset,
     watch,
     setError,
+    clearErrors,
     formState: { errors, touchedFields },
   } = useForm({
     mode: "onchange",
@@ -57,40 +58,9 @@ const UserModal = ({
 
   const username = watch("username");
   const email = watch("email");
+
   useEffect(() => {
-    const checkUniqueness = async () => {
-      if (username) {
-        const response = await client.get("/check-unique/", {
-          params: { username },
-        });
-        setIsUsernameUnique(response.data.is_username_unique);
-        if (!response.data.is_username_unique) {
-          setError("username", {
-            type: "manual",
-            message: "Username already exists",
-          });
-        }
-      }
-    };
-
-    const checkEmailUniqueness = async () => {
-      if (email) {
-        const response = await client.get("/check-unique/", {
-          params: { email },
-        });
-        setIsEmailUnique(response.data.is_email_unique);
-        if (!response.data.is_email_unique) {
-          setError("email", {
-            type: "manual",
-            message: "Email already exists",
-          });
-        }
-      }
-    };
-
-    checkUniqueness();
-    checkEmailUniqueness();
-
+    // Reset form fields if editing and userToEdit is provided
     if (isEditing && userToEdit) {
       reset({
         fname: userToEdit.first_name,
@@ -99,7 +69,53 @@ const UserModal = ({
         username: userToEdit.username,
       });
     }
-  }, [isEditing, userToEdit, reset, username, email]);
+  }, [isEditing, userToEdit, reset]);
+
+  useEffect(() => {
+    // Check username uniqueness
+    const checkUniqueness = async () => {
+      if (username) {
+        const url = isEditing
+          ? `/check-unique/${userToEdit.id}`
+          : `/check-unique`;
+        const response = await client.get(url, { params: { username } });
+        setIsUsernameUnique(response.data.is_username_unique);
+        if (!response.data.is_username_unique) {
+          setError("username", {
+            type: "manual",
+            message: "Username already exists",
+          });
+        } else {
+          clearErrors("username");
+        }
+      }
+    };
+
+    checkUniqueness();
+  }, [username, isEditing, userToEdit, setError, clearErrors]);
+
+  useEffect(() => {
+    // Check email uniqueness
+    const checkEmailUniqueness = async () => {
+      if (email) {
+        const url = isEditing
+          ? `/check-unique/${userToEdit.id}`
+          : `/check-unique`;
+        const response = await client.get(url, { params: { email } });
+        setIsEmailUnique(response.data.is_email_unique);
+        if (!response.data.is_email_unique) {
+          setError("email", {
+            type: "manual",
+            message: "Email already exists",
+          });
+        } else {
+          clearErrors("email");
+        }
+      }
+    };
+
+    checkEmailUniqueness();
+  }, [email, isEditing, userToEdit, setError, clearErrors]);
 
   const onSubmit = (data) => {
     if (!isEmailUnique) {
@@ -117,7 +133,7 @@ const UserModal = ({
 
     console.log(user);
 
-    const url = isEditing ? `/users/${userToEdit._id}/` : `/register/`;
+    const url = isEditing ? `/users/${userToEdit.id}/` : `/register/`;
     const method = isEditing ? "PUT" : "POST";
     client({
       method,
@@ -128,7 +144,6 @@ const UserModal = ({
       data: user,
     })
       .then((response) => {
-        const user = response.data;
         refresh();
         notifySuccess(
           isEditing ? "User updated successfully" : "User created successfully"
@@ -258,27 +273,31 @@ const UserModal = ({
               </p>
             )}
           </div>
-          <div className="mb-4 col-span-2">
-            {/* Use col-span-2 to take both columns */}
-            <label htmlFor="password" className="block text-gray-700 mb-2">
-              Password
-            </label>
-            <input
-              id="password"
-              type="password"
-              className={`w-full px-3 py-2 border border-gray-300 rounded-md h-14 ${getBorderColor(
-                "password",
-                errors,
-                touchedFields
-              )}`}
-              {...register("password", { required: "Password is required" })}
-            />
-            {errors.password && (
-              <p className="text-red-500 text-sm mt-1">
-                {errors.password.message}
-              </p>
-            )}
-          </div>
+
+          {!isEditing && (
+            <div className="mb-4 col-span-2">
+              {/* Use col-span-2 to take both columns */}
+              <label htmlFor="password" className="block text-gray-700 mb-2">
+                Password
+              </label>
+              <input
+                id="password"
+                type="password"
+                className={`w-full px-3 py-2 border border-gray-300 rounded-md h-14 ${getBorderColor(
+                  "password",
+                  errors,
+                  touchedFields
+                )}`}
+                {...register("password", { required: "Password is required" })}
+              />
+              {errors.password && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.password.message}
+                </p>
+              )}
+            </div>
+          )}
+
           <div className="flex justify-end col-span-1 md:col-span-2">
             <button
               type="button"
@@ -289,7 +308,7 @@ const UserModal = ({
             </button>
             <button
               type="submit"
-              className="px-4 py-2 rounded-md font-semibold border-2 text-green-500 border-green-500 hover:bg-green-500 hover:text-white"
+              className="px-4 py-2 rounded-md font-semibold border-2 text-blue-500 border-blue-500 hover:bg-blue-500 hover:text-white"
             >
               {isEditing ? "Update" : "Create"}
             </button>

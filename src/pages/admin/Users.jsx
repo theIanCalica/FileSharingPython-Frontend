@@ -176,7 +176,7 @@ const UsersPage = () => {
                     <img
                       src={user.profile.url}
                       alt="User Profile"
-                      className="w-16 h-16 object-cover"
+                      className="w-16 h-16 object-cover rounded-full"
                     />
                   ) : (
                     <img
