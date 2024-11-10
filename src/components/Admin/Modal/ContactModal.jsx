@@ -1,36 +1,91 @@
-import React, { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { getBorderColor } from "../../../utils/Helpers";
+import React, { useEffect } from "react";
+import { useForm, Controller } from "react-hook-form";
+import Select from "react-select";
+import {
+  getBorderColor,
+  notifyError,
+  notifySuccess,
+} from "../../../utils/Helpers";
 import client from "../../../utils/client";
+
+const statusOptions = [
+  { value: "pending", label: "Pending" },
+  { value: "resolved", label: "Resolved" },
+];
+
+const customSelectStyles = {
+  control: (provided, { isFocused }) => ({
+    ...provided,
+    height: "56px", // Match input height
+    padding: "0 8px",
+    borderColor: isFocused ? "#3b82f6" : "#d1d5db", // Customize focus color and default color
+    borderWidth: "1px",
+    boxShadow: isFocused ? "0 0 0 1px #3b82f6" : "none", // Match the border color on focus
+    borderRadius: "0.375rem", // Rounded corners
+    "&:hover": {
+      borderColor: "#3b82f6", // Border color on hover
+    },
+  }),
+  placeholder: (provided) => ({
+    ...provided,
+    color: "#9ca3af", // Placeholder color
+  }),
+  singleValue: (provided) => ({
+    ...provided,
+    color: "#374151", // Text color
+  }),
+};
+
 const ContactModal = ({ onClose, contact, refresh }) => {
   const {
     register,
     handleSubmit,
     reset,
-    setError,
+    control,
     formState: { errors, touchedFields },
   } = useForm({
-    mode: "onchange",
+    mode: "onChange",
     defaultValues: {
       name: "",
       email: "",
       message: "",
+      status: { value: "pending", label: "Pending" }, // Default value
     },
   });
 
   useEffect(() => {
-    console.log(contact);
     if (contact) {
-      console.log(contact);
       reset({
         name: contact.name,
         email: contact.email,
         message: contact.message,
+        status:
+          statusOptions.find((option) => option.value === contact.status) ||
+          statusOptions[0],
       });
     }
   }, [contact, reset]);
 
-  const onSubmit = (data) => {};
+  const onSubmit = (data) => {
+    const clean_data = {
+      status: data.status.value,
+      name: data.name,
+      email: data.email,
+      message: data.message,
+    };
+    client
+      .put(`contact/${contact.id}/update`, clean_data)
+      .then((response) => {
+        notifySuccess("Updated Successfully");
+        refresh();
+        reset();
+        onClose();
+      })
+      .catch((error) => {
+        notifyError("Something went wrong");
+        console.log(error);
+      });
+  };
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
@@ -41,42 +96,86 @@ const ContactModal = ({ onClose, contact, refresh }) => {
           className="grid grid-cols-1 md:grid-cols-2 gap-4"
         >
           <div className="mb-4">
-            <label htmlFor="fname" className="block text-gray-700 mb-2">
-              First Name
+            <label htmlFor="name" className="block text-gray-700 mb-2">
+              Name
             </label>
             <input
-              id="fname"
+              id="name"
               type="text"
+              readOnly
               className={`w-full px-3 py-2 border border-gray-300 rounded-md h-14 ${getBorderColor(
-                "fname",
+                "name",
                 errors,
                 touchedFields
               )}`}
-              {...register("fname", { required: "First Name is required" })}
+              {...register("name", { required: "Name is required" })}
             />
-            {errors.fname && (
+            {errors.name && (
+              <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>
+            )}
+          </div>
+          <div className="mb-4">
+            <label htmlFor="email" className="block text-gray-700 mb-2">
+              Email
+            </label>
+            <input
+              id="email"
+              type="email"
+              readOnly
+              className={`w-full px-3 py-2 border border-gray-300 rounded-md h-14 ${getBorderColor(
+                "email",
+                errors,
+                touchedFields
+              )}`}
+              {...register("email", { required: "Email is required" })}
+            />
+            {errors.email && (
               <p className="text-red-500 text-sm mt-1">
-                {errors.fname.message}
+                {errors.email.message}
               </p>
             )}
           </div>
           <div className="mb-4">
-            <label htmlFor="lname" className="block text-gray-700 mb-2">
-              Last Name
+            <label htmlFor="message" className="block text-gray-700 mb-2">
+              Message
             </label>
             <input
-              id="lname"
+              id="message"
               type="text"
+              readOnly
               className={`w-full px-3 py-2 border border-gray-300 rounded-md h-14 ${getBorderColor(
-                "lname",
+                "message",
                 errors,
                 touchedFields
               )}`}
-              {...register("lname", { required: "Last Name is required" })}
+              {...register("message", { required: "Message is required" })}
             />
-            {errors.lname && (
+            {errors.message && (
               <p className="text-red-500 text-sm mt-1">
-                {errors.lname.message}
+                {errors.message.message}
+              </p>
+            )}
+          </div>
+          <div className="mb-4">
+            <label htmlFor="status" className="block text-gray-700 mb-2">
+              Status
+            </label>
+            <Controller
+              name="status"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  {...field}
+                  options={statusOptions}
+                  styles={customSelectStyles}
+                  classNamePrefix="react-select"
+                  placeholder="Select status"
+                />
+              )}
+            />
+            {errors.status && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.status.message}
               </p>
             )}
           </div>
@@ -91,7 +190,7 @@ const ContactModal = ({ onClose, contact, refresh }) => {
             </button>
             <button
               type="submit"
-              className="px-4 py-2 rounded-md font-semibold border-2 text-green-500 border-green-500 hover:bg-green-500 hover:text-white"
+              className="px-4 py-2 rounded-md font-semibold border-2 text-blue-500 border-blue-500 hover:bg-blue-500 hover:text-white"
             >
               Update
             </button>

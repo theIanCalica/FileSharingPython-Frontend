@@ -14,23 +14,8 @@ const Layout = () => {
 
   return (
     <div className="flex min-h-screen">
-      {/* Hamburger Menu Button */}
-      <IconButton
-        onClick={toggleSidebar}
-        style={{
-          display: sidebarOpen ? "none" : "block",
-          marginLeft: "auto",
-        }}
-      >
-        <MenuIcon />
-      </IconButton>
-
       {/* Sidebar - Fixed width on larger screens */}
-      <div
-        className={`${
-          sidebarOpen ? "block" : "hidden"
-        } md:block w-64 transition-all duration-300`}
-      >
+      <div>
         <Sidebar />
       </div>
 

@@ -52,7 +52,6 @@ const UsersPage = () => {
 
   const handleMenuClose = () => {
     setAnchorEl(null);
-    // setSelectedUser(null);
   };
 
   const handleEdit = () => {

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import client from "../../utils/client";
-import { notifySuccess, notifyError, formatDate } from "../../utils/Helpers";
+import { notifyError, formatDate } from "../../utils/Helpers";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import { Menu, MenuItem, IconButton } from "@mui/material";
@@ -41,7 +41,6 @@ const Contact = () => {
 
   const handleMenuClose = () => {
     setAnchorEl(null);
-    setSelectedContact(null);
   };
 
   const handleEdit = () => {
@@ -65,6 +64,7 @@ const Contact = () => {
                 <th className="py-2 px-4 border-b text-left">Name</th>
                 <th className="py-2 px-4 border-b text-left">Email</th>
                 <th className="py-2 px-4 border-b text-left">Message</th>
+                <th className="py-2 px-4 border-b text-left">Status</th>
                 <th className="py-2 px-4 border-b text-left">Sent at</th>
                 <th className="py-2 px-4 border-b text-left">Updated at</th>
                 <th className="py-2 px-4 border-b text-left">Action</th>
@@ -77,6 +77,9 @@ const Contact = () => {
                   <td className="py-2 px-4 border-b">{contact.name}</td>
                   <td className="py-2 px-4 border-b">{contact.email}</td>
                   <td className="py-2 px-4 border-b">{contact.message}</td>
+                  <td className="py-2 px-4 border- capitalize">
+                    {contact.status}
+                  </td>
                   <td className="py-2 px-4 border-b">
                     {formatDate(contact.created_at)}
                   </td>

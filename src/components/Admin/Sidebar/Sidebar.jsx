@@ -181,11 +181,15 @@ const Sidebar = ({ isMinimized }) => {
               />
             </div>
             <span
-              className={`text-gray-500 transition-all ease-in-out duration-500 ${
+              className={`transition-all ease-in-out duration-500 ${
                 isMinimized ? "hidden" : "block"
               }`}
               style={{
                 fontSize: "16px",
+                color:
+                  hovered === "users" || selected === "users"
+                    ? "#A1A1AC"
+                    : "#605BFF",
               }}
             >
               Users
@@ -218,11 +222,15 @@ const Sidebar = ({ isMinimized }) => {
               />
             </div>
             <span
-              className={`text-gray-500 transition-all ease-in-out duration-500 ${
+              className={`transition-all ease-in-out duration-500 ${
                 isMinimized ? "hidden" : "block"
               }`}
               style={{
                 fontSize: "16px",
+                color:
+                  hovered === "contacts" || selected === "contacts"
+                    ? "#A1A1AC"
+                    : "#605BFF",
               }}
             >
               Contacts
@@ -323,15 +331,15 @@ const Sidebar = ({ isMinimized }) => {
               />
             </div>
             <span
-              className={` text-gray-500 transition-all ease-in-out duration-500  ${
+              className={`transition-all ease-in-out duration-500 ${
                 isMinimized ? "hidden" : "block"
               }`}
               style={{
                 fontSize: "16px",
                 color:
                   hovered === "profile" || selected === "profile"
-                    ? "605BFF"
-                    : "#9ca3af",
+                    ? "#A1A1AC"
+                    : "#605BFF",
               }}
             >
               Profile
@@ -364,15 +372,15 @@ const Sidebar = ({ isMinimized }) => {
             />
           </div>
           <span
-            className={`text-gray-500 transition-all ease-in-out duration-500 ${
+            className={`transition-all ease-in-out duration-500 ${
               isMinimized ? "hidden" : "block"
             }`}
             style={{
               fontSize: "16px",
               color:
-                hovered === "message" || selected === "message"
-                  ? "605BFF"
-                  : "#9ca3af",
+                hovered === "logout" || selected === "logout"
+                  ? "#A1A1AC"
+                  : "#605BFF",
             }}
           >
             Logout
