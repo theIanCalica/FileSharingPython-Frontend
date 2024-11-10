@@ -8,6 +8,8 @@ import { useNavigate, NavLink } from "react-router-dom";
 import { logout, getUser, getProfile } from "../../../utils/Helpers";
 import Swal from "sweetalert2";
 import client from "../../../utils/client";
+import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
+import Joyride from "react-joyride";
 
 const Navbar = ({ toggleSidebar }) => {
   const navigate = useNavigate();
@@ -16,9 +18,53 @@ const Navbar = ({ toggleSidebar }) => {
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
   const user = getUser();
   const profile = getProfile();
+  const [run, setRun] = useState(false);
 
-  const handleSearch = () => {
-    console.log("Search for:", searchTerm);
+  // Tour steps
+  const steps = [
+    {
+      target: ".help-button", // Target the Help button
+      content: "Click here to get help!",
+      disableOverlay: true,
+    },
+    {
+      target: ".email-button", // Example: Target profile button
+      content: "Here is where you can send email",
+    },
+    {
+      target: ".profile-button",
+      content:
+        "Here is your profile where you can click your profile or logout",
+    },
+    {
+      target: ".sidebar-dashboard",
+      content: "Here is your sidebar where you can accell various resources",
+    },
+    {
+      target: ".main-dashboard",
+      content: "Here is a button to redirect you to your dashboard",
+    },
+    {
+      target: ".users",
+      content: "Here is a button to redirect you to the users page list",
+    },
+    {
+      target: ".contacts",
+      content: "Here is a button to redirect you to the contacts page list",
+    },
+    {
+      target: ".profile",
+      content: "Here is a button to redirect you to your profile page",
+    },
+    {
+      target: ".logout",
+      content: "Here is a button you can use to logout",
+    },
+  ];
+
+  const handleHelpClick = () => {
+    setRun(true);
+    setTimeout(() => setRun(true), 200);
   };
 
   const toggleProfileDropdown = () => {
@@ -78,8 +124,11 @@ const Navbar = ({ toggleSidebar }) => {
       <div className="ml-auto flex items-center w-full">
         {/* Right Side Icons */}
         <div className="flex items-center ml-auto space-x-4">
+          <button className="text-black help-button" onClick={handleHelpClick}>
+            <HelpOutlineIcon />
+          </button>
           <NavLink to={"/admin/email"}>
-            <button className="text-black">
+            <button className="text-black email-button">
               <EmailOutlinedIcon style={{ fontSize: "20px" }} />
             </button>
           </NavLink>
@@ -87,7 +136,7 @@ const Navbar = ({ toggleSidebar }) => {
           <div className="relative">
             <button
               onClick={toggleProfileDropdown}
-              className="text-black flex items-center gap-3"
+              className="text-black flex items-center profile-button gap-3"
             >
               <img
                 src={profile.url}
@@ -118,6 +167,25 @@ const Navbar = ({ toggleSidebar }) => {
           </div>
         </div>
       </div>
+      <Joyride
+        steps={steps}
+        run={run}
+        continuous
+        showSkipButton
+        showProgress
+        spotlightClicks={true}
+        callback={(data) => {
+          const { status } = data;
+          if (status === "finished" || status === "skipped") {
+            setRun(false); // Stop the tour once it's finished or skipped
+          }
+        }}
+        styles={{
+          options: {
+            zIndex: 10000, // Ensure it appears above other elements
+          },
+        }}
+      />
     </nav>
   );
 };

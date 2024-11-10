@@ -59,7 +59,7 @@ const Sidebar = ({ isMinimized }) => {
 
   return (
     <aside
-      className={`  text-white overflow-hidden  ${
+      className={`  text-white overflow-hidden sidebar-dashboard  ${
         isMinimized ? "w-20" : "w-80"
       }`}
       style={{ backgroundColor: "white" }}
@@ -81,7 +81,7 @@ const Sidebar = ({ isMinimized }) => {
         {/* Sidebar Items */}
         <Link to="/admin">
           <li
-            className="mt-3 py-2 px-8 text-gray-400 cursor-pointer flex items-center w-full transition-colors duration-300 ease-in-out relative"
+            className="mt-3 main-dashboard py-2 px-8 text-gray-400 cursor-pointer flex items-center w-full transition-colors duration-300 ease-in-out relative"
             onMouseOver={() => setHovered("dashboard")}
             onMouseOut={() => setHovered(null)}
             onClick={() => handleItemClick("dashboard")}
@@ -93,7 +93,7 @@ const Sidebar = ({ isMinimized }) => {
             }}
           >
             {selected === "dashboard" && <></>}
-            <div className="mr-5 rounded-md transition-colors duration-300 ease-in-out">
+            <div className="mr-5  rounded-md transition-colors duration-300 ease-in-out">
               <DashboardIcon
                 style={{
                   color: "#605BFF",
@@ -158,7 +158,7 @@ const Sidebar = ({ isMinimized }) => {
         {/* Users */}
         <Link to="/admin/users">
           <li
-            className="mt-3 py-2 px-8 text-gray-400 cursor-pointer flex items-center w-full transition-colors duration-300 ease-in-out relative"
+            className="mt-3 py-2 px-8 users text-gray-400 cursor-pointer flex items-center w-full transition-colors duration-300 ease-in-out relative"
             onMouseOver={() => setHovered("users")}
             onMouseOut={() => setHovered(null)}
             onClick={() => handleItemClick("users")}
@@ -195,7 +195,7 @@ const Sidebar = ({ isMinimized }) => {
 
         <Link to="/admin/contacts">
           <li
-            className="mt-3 py-2 px-8 text-gray-400 cursor-pointer flex items-center w-full transition-colors duration-300 ease-in-out relative"
+            className="mt-3 py-2 contacts px-8 text-gray-400 cursor-pointer flex items-center w-full transition-colors duration-300 ease-in-out relative"
             onMouseOver={() => setHovered("contacts")}
             onMouseOut={() => setHovered(null)}
             onClick={() => handleItemClick("contacts")}
@@ -298,7 +298,7 @@ const Sidebar = ({ isMinimized }) => {
         {/* User Profile */}
         <Link to="profile">
           <li
-            className="mt-3 py-2 px-8 text-gray-400 cursor-pointer flex items-center w-full transition-colors duration-300 ease-in-out relative"
+            className="mt-3 profile py-2 profile px-8 text-gray-400 cursor-pointer flex items-center w-full transition-colors duration-300 ease-in-out relative"
             onMouseOver={() => setHovered("profile")}
             onMouseOut={() => setHovered(null)}
             onClick={() => handleItemClick("profile")}
@@ -341,7 +341,7 @@ const Sidebar = ({ isMinimized }) => {
 
         {/* Logout */}
         <li
-          className="mt-3 py-2 px-8 text-gray-400 cursor-pointer flex items-center w-full transition-colors duration-300 ease-in-out relative"
+          className="mt-3 logout py-2 px-8 text-gray-400 cursor-pointer flex items-center w-full transition-colors duration-300 ease-in-out relative"
           onMouseOver={() => setHovered("logout")}
           onMouseOut={() => setHovered(null)}
           onClick={handleLogout}
