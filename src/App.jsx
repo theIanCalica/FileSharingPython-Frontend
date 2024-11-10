@@ -29,33 +29,87 @@ import ProfileAdmin from "./pages/admin/Profile";
 import ContactAdminPages from "./pages/admin/Contact";
 import NewPassword from "./pages/user/NewPassword";
 
+// Protected route
+import ProtectedRoute from "./utils/authRoutes/ProtectedRoute";
+
 function App() {
   return (
     <Router>
       <Routes>
+        {/* Public Routes */}
         <Route path="/" element={<HomeLayout />}>
-          <Route index element={<Homepage />}></Route>
-          <Route path="about-us" element={<AboutPage />}></Route>
-          <Route path="/contact-us" element={<ContactPage />}></Route>
+          <Route index element={<Homepage />} />
+          <Route path="about-us" element={<AboutPage />} />
+          <Route path="contact-us" element={<ContactPage />} />
         </Route>
         <Route path="/reset-password" element={<ResetPasswordPage />}></Route>
         <Route path="/change-password/:id" element={<NewPassword />}></Route>
         <Route path="/signin" element={<SignIn />}></Route>
         <Route path="/signup" element={<SignUp />}></Route>
         <Route path="/401" element={<UnauthorizedPage />}></Route>
-        <Route path="/drive" element={<AuthUserLayout />}>
-          <Route index element={<AuthUserPage />}></Route>
-          <Route path="files" element={<AuthFiles />}></Route>
-          <Route path="profile" element={<AuthProfile />}></Route>
-          <Route path="shared-with-me" element={<AuthSharedPage />}></Route>
+
+        {/* Authenticated User Routes */}
+        <Route
+          path="/drive"
+          element={<ProtectedRoute element={<AuthUserLayout />} />}
+        >
+          <Route
+            index
+            element={<ProtectedRoute element={<AuthUserPage />} />}
+          />
+          <Route
+            path="files"
+            element={<ProtectedRoute element={<AuthFiles />} />}
+          />
+          <Route
+            path="profile"
+            element={<ProtectedRoute element={<AuthProfile />} />}
+          />
+          <Route
+            path="shared-with-me"
+            element={<ProtectedRoute element={<AuthSharedPage />} />}
+          />
         </Route>
         {/* Routes for admin */}
-        <Route path="/admin" element={<AdminLayout />}>
-          <Route index element={<AdminHomePage />}></Route>
-          <Route path="users" element={<UsersPage />}></Route>
-          <Route path="email" element={<EmailAdmin />}></Route>
-          <Route path="profile" element={<ProfileAdmin />}></Route>
-          <Route path="contacts" element={<ContactAdminPages />}></Route>
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute element={<AdminLayout />} adminOnly={true} />
+          }
+        >
+          <Route
+            index
+            element={
+              <ProtectedRoute element={<AdminHomePage />} adminOnly={true} />
+            }
+          />
+          <Route
+            path="users"
+            element={
+              <ProtectedRoute element={<UsersPage />} adminOnly={true} />
+            }
+          />
+          <Route
+            path="email"
+            element={
+              <ProtectedRoute element={<EmailAdmin />} adminOnly={true} />
+            }
+          />
+          <Route
+            path="profile"
+            element={
+              <ProtectedRoute element={<ProfileAdmin />} adminOnly={true} />
+            }
+          />
+          <Route
+            path="contacts"
+            element={
+              <ProtectedRoute
+                element={<ContactAdminPages />}
+                adminOnly={true}
+              />
+            }
+          />
         </Route>
       </Routes>
       <ToastContainer />
