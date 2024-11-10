@@ -9,6 +9,7 @@ import HomeLayout from "./components/User/layout";
 import ContactPage from "./pages/user/Contact/Contact";
 import AboutPage from "./pages/user/About/About";
 import ResetPasswordPage from "./pages/user/ResetPassword";
+import UnauthorizedPage from "./pages/Error401";
 
 // Pages for authenticated user
 import AuthUserPage from "./pages/user/Auth/index";
@@ -41,6 +42,7 @@ function App() {
         <Route path="/change-password/:id" element={<NewPassword />}></Route>
         <Route path="/signin" element={<SignIn />}></Route>
         <Route path="/signup" element={<SignUp />}></Route>
+        <Route path="/401" element={<UnauthorizedPage />}></Route>
         <Route path="/drive" element={<AuthUserLayout />}>
           <Route index element={<AuthUserPage />}></Route>
           <Route path="files" element={<AuthFiles />}></Route>
