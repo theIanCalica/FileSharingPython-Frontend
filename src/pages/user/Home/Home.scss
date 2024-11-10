@@ -1,441 +1,334 @@
+@keyframes slideIn {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .carousel-container {
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 2rem 0;
-
-  .swiper {
-    overflow: hidden;
-  }
-
-  .swiper-pagination {
-    position: absolute;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    gap: 10px;
-
-    .swiper-pagination-bullet {
-      width: 12px;
-      height: 12px;
-      background-color: #ddd;
-      border-radius: 50%;
-      opacity: 0.7;
-      transition: background-color 0.3s, opacity 0.3s;
-
-      &-active {
-        background-color: rgba(0, 132, 255, 0.8); /* Active color */
-        opacity: 1;
-      }
-    }
-  }
+  position: relative;
+  max-width: 100%;
+  overflow: hidden;
 }
 
 .carousel-slide {
   position: relative;
   display: flex;
   align-items: center;
-  justify-content: flex-start; /* Align items to the left */
+  justify-content: flex-start;
   height: 400px;
   overflow: hidden;
   border-radius: 10px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  opacity: 0.8; /* Set transparency for all elements */
+  opacity: 0.8;
+}
 
-  .carousel-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    filter: brightness(70%);
-    transition: transform 0.3s ease-in-out;
+.carousel-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(70%);
+  transition: transform 0.3s ease-in-out;
+}
 
-    &:hover {
-      transform: scale(1.05);
-    }
+.carousel-image:hover {
+  transform: scale(1.05);
+}
+
+.signup-button {
+  padding: 0.8rem 1.5rem;
+  background-color: rgba(0, 132, 255, 0.8);
+  color: #fff;
+  border-radius: 30px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.signup-button:hover {
+  background-color: rgba(0, 132, 255, 1);
+}
+
+/* Floating Section */
+.floating-section {
+  background-position: center;
+  background-size: cover;
+  height: 400px;
+  position: relative;
+  text-align: center;
+  color: white;
+}
+
+.floating-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 0 20px;
+  animation: slideIn 1s ease-in-out;
+}
+
+.floating-text-1 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  opacity: 0;
+  animation: fadeIn 2s ease-in-out forwards;
+}
+
+.floating-text-2 {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-top: 10px;
+  opacity: 0;
+  animation: fadeIn 2s ease-in-out forwards;
+  animation-delay: 1s;
+}
+
+.floating-text-3 {
+  font-size: 1.2rem;
+  margin-top: 20px;
+  opacity: 0;
+  animation: fadeIn 2s ease-in-out forwards;
+  animation-delay: 2s;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
   }
-
-  .slide-content {
-    position: absolute;
-    color: #fff;
-    text-align: left; /* Align text to the left */
-    max-width: 600px;
-    padding: 1rem;
-    opacity: 0; /* Start with opacity 0 for animation */
-    transform: translateY(20px); /* Start position for entrance effect */
-    animation: slideIn 0.8s forwards; /* Apply animation */
-    animation-delay: 0.2s; /* Delay for smoother entrance */
-
-    h1 {
-      font-size: 2.5rem;
-      margin: 0.5rem 0 1rem; /* Increased bottom margin for spacing */
-      color: #fff; /* Ensure text is visible */
-      font-family: 'Arial', sans-serif; /* Change font style */
-    }
-
-    p {
-      font-size: 1rem;
-      margin-bottom: 1.5rem; /* Increased bottom margin for spacing */
-      opacity: 0.9; /* Text opacity */
-      font-family: 'Arial', sans-serif; /* Change font style */
-    }
-
-    .signup-button {
-      padding: 0.8rem 1.5rem;
-      background-color: rgba(0, 132, 255, 0.8); /* Make button semi-transparent */
-      color: #fff;
-      font-size: 1rem;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: background-color 0.3s;
-      opacity: 0; /* Start with opacity 0 for animation */
-      transform: translateY(20px); /* Start position for entrance effect */
-      animation: slideIn 0.8s forwards; /* Apply animation */
-      animation-delay: 0.4s; /* Delay for button entrance */
-
-      &:hover {
-        background-color: rgba(0, 132, 255, 0.8); /* Semi-transparent hover */
-      }
-    }
+  100% {
+    opacity: 1;
   }
 }
 
-/* Define the entrance animation */
-@keyframes slideIn {
-  to {
-    opacity: 1; /* Fade in */
-    transform: translateY(0); /* Move to final position */
-  }
-}
-
-/* About Section Styles */
+/* About Section */
 .about-container {
-  display: flex;
-  height: 100vh;
-
-  .left-side {
-    flex: 1; // Takes half of the container
-    display: flex;
-    align-items: center; // Center the image vertically
-    justify-content: center; // Center the image horizontally
-
-    .big-image {
-      width: 80%; // Adjust the width as needed (e.g., 80% of the parent container)
-      height: auto; // Maintain aspect ratio
-      max-width: 400px; // Reduced max-width for the image
-      border-radius: 10px; // Optional: Add some rounding
-    }
-  }
-
-  .right-side {
-    flex: 1; // Takes the other half of the container
-    display: flex;
-    flex-direction: column; // Stack items vertically
-    padding: 20px; // Add some padding
-
-    .first-div {
-      display: flex;
-      align-items: center; // Align text and line vertically
-      margin-bottom: 40px; // Increased bottom margin for spacing
-
-      hr {
-        width: 50%; // Reduced horizontal line length
-        border: 1px solid #ccc; // Line style
-        margin-right: 10px; // Space between line and text
-      }
-
-      span {
-        font-size: 1.5rem;
-        font-weight: bold;
-        font-family: 'Arial', sans-serif; // Change font style
-      }
-    }
-
-    .second-div {
-      margin-bottom: 40px; // Increased bottom margin for spacing
-
-      h1 {
-        font-size: 2rem;
-        margin: 0; // Remove default margin
-        font-family: 'Arial', sans-serif; // Change font style
-      }
-    }
-
-    .third-div {
-      margin-bottom: 40px; // Increased bottom margin for spacing
-
-      p {
-        font-size: 1rem;
-        line-height: 1.5; // Better readability
-        font-family: 'Arial', sans-serif; // Change font style
-      }
-    }
-
-    .fourth-div {
-      display: flex;
-      justify-content: flex-start; // Align button to the left
-
-      .more-info-button {
-        padding: 10px 20px; // Button padding
-        border: none;
-        border-radius: 50px; // Oval shape
-        background-color: #4285F4; // Button color
-        color: white;
-        font-size: 1rem;
-        cursor: pointer;
-        transition: background-color 0.3s;
-
-        &:hover {
-          background-color: #357ae8; // Darker color on hover
-        }
-      }
-    }
-  }
-}
-
-.benefits-container {
+  padding: 4rem 1rem;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: 2rem;
-  
-  .benefits-line {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    
-    .benefits-divider {
-      flex: 1;
-      height: 2px;
-      background-color: #4285F4; /* Adjust color as needed */
-      margin-right: 10px;
-    }
-    
-    h2 {
-      margin: 0;
-      font-size: 1.5rem; /* Adjust font size as needed */
-    }
-  }
-
-  .benefits-title {
-    text-align: center;
-
-    h1 {
-      margin: 0;
-      font-size: 2rem; /* Adjust font size as needed */
-    }
-  }
-
-  .benefits-description {
-    text-align: center;
-    margin: 1rem 0;
-
-    p {
-      max-width: 600px; /* Limit the width of the paragraph */
-      text-align: center;
-      font-size: 1rem; /* Adjust font size as needed */
-      line-height: 1.5;
-    }
-  }
-
-  .benefits-features {
-    display: flex;
-    justify-content: space-between;
-    width: 100%; /* Full width */
-    max-width: 1200px; /* Limit the maximum width */
-    margin: 1rem 0;
-
-    .feature {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-
-      .feature-icon {
-        width: 50px; /* Adjust icon size */
-        height: 50px; /* Adjust icon size */
-        margin-bottom: 0.5rem;
-      }
-
-      p {
-        margin: 0;
-        font-size: 0.9rem; /* Adjust font size as needed */
-      }
-    }
-  }
-
-  .benefits-signup {
-    margin-top: 1rem;
-
-    .signup-button {
-      padding: 0.8rem 1.5rem;
-      background-color: #4285F4; /* Adjust color as needed */
-      color: #ffffff;
-      font-size: 1rem;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: background-color 0.3s;
-
-      &:hover {
-        background-color: #357ae8; /* Adjust hover color */
-      }
-    }
-  }
 }
 
-.floating-section {
-  position: relative;
+.left-side {
   width: 100%;
-  height: 100vh;
-
-  .background-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    filter: brightness(0.6); // Darkens the background for better contrast
-  }
-
-  .floating-content {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    background-color: rgba(255, 255, 255, 0.5); // Slightly less transparent
-    padding: 3rem 4rem;
-    border-radius: 12px;
-    max-width: 80%;
-  }
-
-  .floating-text-1 {
-    font-size: 2rem;
-    font-weight: bold;
-    color: #222;
-    margin-bottom: 2rem;
-  }
-
-  .floating-text-2 h1 {
-    font-size: 3rem;
-    font-weight: bold;
-    margin: 0.8rem 0;
-    color: #111;
-    line-height: 1.2;
-  }
-
-  .floating-text-3 p {
-    font-size: 1.5rem;
-    line-height: 1.6;
-    color: #333;
-    margin-top: 2rem;
-    max-width: 700px; // Ensures readability with limited line length
-  }
+  max-width: 600px;
+  margin-bottom: 2rem;
 }
 
+.right-side {
+  width: 100%;
+  max-width: 600px;
+  text-align: left;
+}
+
+.first-div span {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #4a4a4a;
+}
+
+.second-div h1 {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.third-div p {
+  font-size: 1.1rem;
+  color: #666;
+}
+
+.more-info-button {
+  padding: 0.8rem 2rem;
+  background-color: #007aff;
+  color: white;
+  font-weight: bold;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.more-info-button:hover {
+  background-color: #005bb5;
+}
+
+/* Benefits Section */
+.benefits-container {
+  background-color: #f7f7f7;
+  padding: 5rem 1rem;
+  text-align: center;
+}
+
+.benefits-title h1 {
+  font-size: 3rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.benefits-title h2 {
+  font-size: 1.5rem;
+  color: #666;
+  margin-top: 10px;
+}
+
+.benefits-title p {
+  font-size: 1rem;
+  color: #777;
+  margin-top: 20px;
+}
+
+.benefits-features {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+  margin-top: 4rem;
+}
+
+.feature {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.feature img {
+  width: 60px;
+  height: 60px;
+  margin-bottom: 1rem;
+}
+
+.feature p {
+  font-size: 1rem;
+  color: #333;
+}
+
+.benefits-signup {
+  margin-top: 4rem;
+}
+
+.benefits-signup .signup-button {
+  padding: 1rem 2.5rem;
+  background-color: #007aff;
+  color: white;
+  font-size: 1.2rem;
+  font-weight: bold;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.benefits-signup .signup-button:hover {
+  background-color: #005bb5;
+}
+
+/* Features Section */
 .features-container {
-  padding: 40px;
-  background-color: #f7f7f7; // Light background for contrast
+  padding: 4rem 1rem;
+  text-align: center;
+}
 
-  .features-title {
-    text-align: center;
-    h1 {
-      font-size: 2.5rem;
-      color: #333; // Dark color for title
-      margin-bottom: 10px;
-    }
-  }
+.features-container h1 {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #333;
+}
 
-  .features-description {
-    text-align: center;
-    p {
-      font-size: 1.2rem;
-      color: #666; // Lighter text color for description
-      max-width: 800px;
-      margin: 0 auto 30px; // Centered with margin
-    }
+.features-container p {
+  font-size: 1.1rem;
+  color: #777;
+  margin-top: 20px;
+}
+
+.features-icons {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+  margin-top: 4rem;
+}
+
+.icon-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.icon-circle {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background-color: #f0f0f0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.icon-container img {
+  width: 40px;
+  height: 40px;
+}
+
+.features-steps {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 5rem;
+}
+
+.step-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #007aff;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  font-size: 1.2rem;
+  margin: 0 1rem;
+}
+
+.arrow {
+  font-size: 2rem;
+  color: #007aff;
+}
+
+/* Media Queries for responsiveness */
+@media screen and (min-width: 640px) {
+  .benefits-features {
+    grid-template-columns: repeat(3, 1fr);
   }
 
   .features-icons {
-    display: flex;
-    justify-content: space-around;
-    margin-bottom: 30px;
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
 
-    .icon-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-
-      .icon-circle {
-        width: 80px; // Size of the circle
-        height: 80px; // Size of the circle
-        border-radius: 50%;
-        background-color: #fff; // White background for icons
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); // Subtle shadow
-        margin-bottom: 10px;
-
-        img {
-          max-width: 60%; // Limit the icon size
-          max-height: 60%; // Limit the icon size
-        }
-      }
-      
-      p {
-        text-align: center;
-        color: #444; // Darker text for icon captions
-        font-weight: bold;
-      }
-    }
+@media screen and (min-width: 1024px) {
+  .carousel-container {
+    max-width: 1200px;
+    margin: 0 auto;
   }
 
-  .features-captions {
-    display: flex;
-    justify-content: space-around;
-    margin-bottom: 30px;
-
-    .caption-container {
-      width: 20%; // Each caption takes equal width
-      text-align: center;
-
-      p {
-        color: #777; // Lighter text color for captions
-      }
-    }
+  .about-container {
+    flex-direction: row;
+    justify-content: space-between;
   }
 
-  .features-steps {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  .left-side,
+  .right-side {
+    width: 48%;
+  }
 
-    .steps-wrapper {
-      display: flex; // Flex to align step numbers and arrows
-      align-items: center;
+  .benefits-features {
+    grid-template-columns: repeat(4, 1fr);
+  }
 
-      .step-circle {
-        width: 40px; // Size of the step circle
-        height: 40px; // Size of the step circle
-        border-radius: 50%;
-        background-color: #4285F4; // Example accent color
-        color: white;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-weight: bold;
-        margin: 0 10px; // Spacing between circles
-      }
-
-      .arrow {
-        color: #444; // Color for the arrow
-        font-size: 1.5rem; // Adjust arrow size
-      }
-    }
+  .features-icons {
+    grid-template-columns: repeat(4, 1fr);
   }
 }
