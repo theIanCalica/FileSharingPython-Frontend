@@ -27,7 +27,7 @@ const ChangePassword = ({ onClose, fileId }) => {
       .then((response) => {
         notifySuccess("Successfully shared the file");
         reset();
-        onclose();
+        onClose();
       })
       .catch((error) => {
         notifyError("Something went wrong");

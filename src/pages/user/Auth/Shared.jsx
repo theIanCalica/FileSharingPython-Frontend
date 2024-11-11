@@ -122,7 +122,7 @@ const Shared = () => {
 
   return (
     <div className="p-6 bg-gray-100 min-h-screen">
-      <h2 className="font-sans font-bold text-3xl mb-3 text-gray-700">
+      <h2 className="font-sans font-bold text-2xl md:text-3xl mb-5 text-gray-700 text-center md:text-left">
         Shared with me
       </h2>
       {sharedFiles.length === 0 ? (
@@ -130,23 +130,28 @@ const Shared = () => {
           <img
             src="/images/auth/shared.png"
             alt="No files"
-            style={{ height: "600px", width: "700px" }}
+            className="max-w-full h-auto"
+            style={{ maxHeight: "500px" }}
           />
         </div>
       ) : (
-        <div className="">
+        <div className="overflow-x-auto">
           <table className="min-w-full bg-white shadow-lg rounded-lg">
             <thead>
-              <tr className="bg-blue-500 text-white text-lg">
-                <th className="py-3 px-6 font-semibold text-left rounded-tl-lg">
+              <tr className="bg-blue-500 text-white text-sm md:text-lg">
+                <th className="py-3 px-4 md:px-6 font-semibold text-left rounded-tl-lg">
                   File Icon
                 </th>
-                <th className="py-3 px-6 font-semibold text-left">File Name</th>
-                <th className="py-3 px-6 font-semibold text-left">Shared by</th>
-                <th className="py-3 px-6 font-semibold text-left">
+                <th className="py-3 px-4 md:px-6 font-semibold text-left">
+                  File Name
+                </th>
+                <th className="py-3 px-4 md:px-6 font-semibold text-left">
+                  Shared by
+                </th>
+                <th className="py-3 px-4 md:px-6 font-semibold text-left">
                   Shared Date
                 </th>
-                <th className="py-3 px-6 font-semibold text-left rounded-tr-lg">
+                <th className="py-3 px-4 md:px-6 font-semibold text-left rounded-tr-lg">
                   Actions
                 </th>
               </tr>
@@ -159,20 +164,23 @@ const Shared = () => {
                     index % 2 === 0 ? "bg-gray-50" : "bg-white"
                   } hover:bg-gray-100`}
                 >
-                  <td className="py-4 px-6 flex justify-center items-center">
+                  <td className="py-4 px-4 md:px-6 flex justify-center items-center">
                     <img
                       src={getFileTypeIcon(file.file_type)}
                       alt="file icon"
-                      className="w-12 h-12"
+                      className="w-8 h-8 md:w-12 md:h-12"
                     />
                   </td>
-                  <td className="py-4 px-6 text-gray-700">{file.file_name}</td>
-                  <td className="py-4 px-6 text-gray-700">{file.username}</td>
-                  <td className="py-4 px-6 text-gray-700">
+                  <td className="py-4 px-4 md:px-6 text-gray-700">
+                    {file.file_name}
+                  </td>
+                  <td className="py-4 px-4 md:px-6 text-gray-700">
+                    {file.username}
+                  </td>
+                  <td className="py-4 px-4 md:px-6 text-gray-700">
                     {formatDate(file.shared_date)}
                   </td>
-
-                  <td className="py-4 px-6 text-gray-700">
+                  <td className="py-4 px-4 md:px-6 text-gray-700">
                     <div className="relative">
                       <button
                         onClick={() => toggleDropdown(file.id)}
@@ -181,7 +189,7 @@ const Shared = () => {
                         &#8942;
                       </button>
                       {activeDropdown === file.id && (
-                        <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-300 rounded-md shadow-lg z-10">
+                        <div className="absolute right-0 mt-2 w-36 bg-white border border-gray-300 rounded-md shadow-lg z-10">
                           <button
                             onClick={() => handleDecrypt(file.file_id)}
                             className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 transition duration-200"
