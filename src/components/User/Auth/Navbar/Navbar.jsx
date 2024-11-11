@@ -20,6 +20,23 @@ const Navbar = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false); // State for mobile menu
   const [run, setRun] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  // Handle input change
+  const handleSearchChange = (event) => {
+    setSearchQuery(event.target.value);
+  };
+
+  const handleSearchSubmit = async () => {
+    if (searchQuery.trim()) {
+      // Redirect to search results with query parameter `q`
+      navigate(
+        `/drive/search-results/${encodeURIComponent(
+          searchQuery
+        )}?q=${encodeURIComponent(searchQuery)}`
+      );
+    }
+  };
 
   // Tour steps
   const steps = [
@@ -138,6 +155,10 @@ const Navbar = () => {
           <input
             type="text"
             placeholder="Search in Drive"
+            onChange={handleSearchChange} // Update search query
+            onKeyDown={(e) => {
+              if (e.key === "Enter") handleSearchSubmit(); // Submit search on Enter
+            }}
             style={{
               border: "none",
               outline: "none",

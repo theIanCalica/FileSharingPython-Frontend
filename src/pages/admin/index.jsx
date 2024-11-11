@@ -82,7 +82,7 @@ const Home = () => {
           </p>
         </div>
       )}
-      <div className="grid gap-4 p-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-4 py-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
         <Widget type="User" count={userCount} />
         <Widget type="Contact" count={contactCount} />
         <Widget type="File" count={fileCount} />

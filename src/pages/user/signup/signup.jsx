@@ -68,7 +68,7 @@ const SignUp = () => {
         reset();
         notifySuccess("Registration successful!");
         authenticate(response.data);
-        navigate("/drive");
+        navigate("/drive/files");
       });
     } catch (error) {
       notifyError("Registration failed. Please try again.");

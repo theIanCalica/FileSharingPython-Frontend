@@ -6,7 +6,6 @@ import {
   notifyError,
   getBorderColor,
 } from "../../../../utils/Helpers";
-import { ToastContainer } from "react-toastify";
 
 const ChangePassword = ({ onClose, fileId }) => {
   const {
@@ -80,7 +79,6 @@ const ChangePassword = ({ onClose, fileId }) => {
           </div>
         </form>
       </div>
-      <ToastContainer />
     </div>
   );
 };

@@ -1,16 +1,20 @@
 import React, { useEffect, useState } from "react";
-import client from "../../../utils/client";
+import client from "../../../utils/client"; // Assuming you have an axios client setup
 import { formatDate, notifyError, notifySuccess } from "../../../utils/Helpers";
 import Swal from "sweetalert2";
+import { useLocation } from "react-router-dom"; // For accessing the query parameter
 import UserModal from "../../../components/User/Auth/Modals/UserModal";
-
-const Files = () => {
+const FilesSearch = () => {
+  const location = useLocation(); // Get the query from URL
   const [files, setFiles] = useState([]);
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [uploading, setUploading] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [progress, setProgress] = useState(0);
   const [selectedFileId, setSelectedFileId] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  // Extract the search query parameter
+  const searchParams = new URLSearchParams(location.search);
+  const query = searchParams.get("q"); // Get the search query from the URL
 
   const handleOpenModal = (fileId) => {
     setSelectedFileId(fileId); // Store the selected file ID
@@ -21,54 +25,22 @@ const Files = () => {
     setIsModalOpen(false);
   };
 
-  const fetchFiles = async () => {
-    try {
-      const response = await client.get("/files");
-      setFiles(response.data);
-      console.log(response.data);
-    } catch (error) {
-      console.error("Error fetching files:", error);
+  useEffect(() => {
+    if (query) {
+      // Fetch files based on the query parameter
+      const fetchFiles = async () => {
+        try {
+          const response = await client.get(`/search/?q=${query}`); // Your search API endpoint
+          setFiles(response.data.files); // Set the files returned by the API
+        } catch (error) {
+          console.error("Error fetching files:", error);
+          notifyError("Failed to fetch files. Please try again.");
+        }
+      };
+
+      fetchFiles();
     }
-  };
-
-  const handleFileChange = (event) => {
-    const files = event.target.files;
-    const formData = new FormData();
-
-    for (let i = 0; i < files.length; i++) {
-      formData.append("files", files[i]);
-    }
-
-    uploadFiles(formData);
-  };
-
-  const uploadFiles = async (formData) => {
-    setUploading(true);
-    try {
-      const response = await client.post("/upload/", formData, {
-        onUploadProgress: (progressEvent) => {
-          const total = progressEvent.total;
-          const current = progressEvent.loaded;
-          const percentCompleted = Math.floor((current / total) * 100);
-          setProgress(percentCompleted);
-        },
-        headers: {
-          Accept: "application/json",
-          "Content-Type": undefined,
-        },
-        withCredentials: true,
-      });
-
-      notifySuccess("File(s) uploaded successfully!", response.data);
-      fetchFiles(); // Refresh files list after upload
-    } catch (error) {
-      notifyError("Something went wrong");
-      console.error(error.message);
-    } finally {
-      setUploading(false);
-      setProgress(0);
-    }
-  };
+  }, [query]);
 
   const getFileTypeIcon = (fileType) => {
     switch (fileType) {
@@ -97,6 +69,8 @@ const Files = () => {
 
   const handleDecrypt = async (fileId) => {
     try {
+      console.log(fileId);
+
       let timerInterval;
       Swal.fire({
         title: "Decrypting...",
@@ -207,7 +181,6 @@ const Files = () => {
       // Reset the active dropdown
       setActiveDropdown(null);
     } catch (err) {
-      // Close the SweetAlert and show an error alert if the deletion fails
       Swal.close();
       Swal.fire({
         icon: "error",
@@ -221,40 +194,27 @@ const Files = () => {
   };
 
   const toggleDropdown = (fileId) => {
-    setActiveDropdown(activeDropdown === fileId ? null : fileId); // Toggle the dropdown for the specific file
+    setActiveDropdown(activeDropdown === fileId ? null : fileId); // Toggle dropdown
   };
-
-  useEffect(() => {
-    fetchFiles();
-  }, []);
 
   return (
     <div className="p-6 bg-gray-100 min-h-screen">
       <h2 className="font-sans font-bold text-3xl mb-6 text-gray-700">
-        My Files
+        Search Results for "{query}"
       </h2>
-      <button
-        className="border border-blue-500 mb-6 text-blue-500 hover:bg-blue-500 hover:text-white font-bold py-2 px-6 rounded transition duration-300"
-        onClick={() => document.getElementById("file-upload").click()}
-      >
-        Upload File
-      </button>
-      <input
-        id="file-upload"
-        type="file"
-        multiple
-        style={{ display: "none" }}
-        onChange={handleFileChange}
-      />
 
       {files.length === 0 ? (
         <div className="flex flex-col items-center justify-center">
           <img
-            src="/images/auth/drive.png"
+            src="/images/search.png"
             alt="No files available"
             className="mt-3"
             style={{ width: "480px", height: "480px" }}
           />
+          <p className="text-xl text-gray-600 mt-4 font-semibold">
+            Oops! We couldn't find any matching files. <br /> Try searching with
+            a different term.
+          </p>
         </div>
       ) : (
         <div>
@@ -309,16 +269,16 @@ const Files = () => {
                             Decrypt
                           </button>
                           <button
-                            className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 transition duration-200"
-                            onClick={() => handleOpenModal(file.id)}
-                          >
-                            Share
-                          </button>
-                          <button
                             onClick={() => handleDelete(file.id)}
                             className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 transition duration-200"
                           >
                             Delete
+                          </button>
+                          <button
+                            onClick={() => handleOpenModal(file.id)}
+                            className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 transition duration-200"
+                          >
+                            Share
                           </button>
                         </div>
                       )}
@@ -330,29 +290,6 @@ const Files = () => {
           </table>
         </div>
       )}
-
-      {/* Progress bar and modal components */}
-      {uploading && (
-        <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-gray-500 bg-opacity-50 z-50">
-          <div className="bg-white p-8 w-96 rounded-lg shadow-lg">
-            <h3 className="text-2xl font-semibold mb-4 text-center">
-              Uploading...
-            </h3>
-            <div className="relative pt-1">
-              <div className="overflow-hidden h-4 text-xs flex rounded bg-blue-200">
-                <div
-                  style={{ width: `${progress}%` }}
-                  className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-blue-500 transition-all duration-300"
-                ></div>
-              </div>
-              <p className="text-center text-lg mt-4 text-gray-600">
-                {progress}%
-              </p>
-            </div>
-          </div>
-        </div>
-      )}
-
       {isModalOpen && (
         <UserModal
           isOpen={isModalOpen}
@@ -364,4 +301,4 @@ const Files = () => {
   );
 };
 
-export default Files;
+export default FilesSearch;

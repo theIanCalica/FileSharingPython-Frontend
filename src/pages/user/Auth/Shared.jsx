@@ -80,13 +80,33 @@ const Shared = () => {
       }
 
       const filenameMatch = contentDisposition.match(/filename="?([^";]+)"?/);
-      const filename =
+      let filename =
         filenameMatch && filenameMatch[1]
           ? filenameMatch[1]
           : "downloaded_file";
 
+      // Map MIME type to file extension
+      const mimeType = response.headers["content-type"];
+      const mimeToExtension = {
+        "application/pdf": ".pdf",
+        "image/jpeg": ".jpg",
+        "image/png": ".png",
+        "application/zip": ".zip",
+        "application/msword": ".doc",
+        "application/vnd.ms-excel": ".xls",
+        // Add more MIME types as needed
+      };
+
+      // Check if filename already has an extension
+      if (!filename.match(/\.[a-z0-9]+$/i)) {
+        const extension = mimeToExtension[mimeType];
+        if (extension) {
+          filename += extension;
+        }
+      }
+
       const blob = new Blob([response.data], {
-        type: response.headers["content-type"],
+        type: mimeType,
       });
       const url = window.URL.createObjectURL(blob);
 

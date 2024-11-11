@@ -32,7 +32,7 @@ const SignIn = () => {
       if (user.is_superuser) {
         navigate("/admin");
       } else {
-        navigate("/drive");
+        navigate("/drive/files");
       }
     } catch (error) {
       if (error.response) {

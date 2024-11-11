@@ -36,6 +36,30 @@ const Sidebar = () => {
     setAnchorEl(event.currentTarget);
   };
 
+  function StorageProgressBar({ totalSize }) {
+    const maxStorage = 15 * 1024 * 1024 * 1024; // 15 GB in bytes
+    const usagePercentage = Math.max((totalSize / maxStorage) * 100, 1);
+
+    return (
+      <div
+        style={{
+          height: "5px",
+          backgroundColor: "#e0e0e0",
+          borderRadius: "3px",
+          overflow: "hidden",
+        }}
+      >
+        <div
+          style={{
+            width: `${usagePercentage}%`,
+            height: "100%",
+            backgroundColor: "#1a73e8",
+          }}
+        ></div>
+      </div>
+    );
+  }
+
   const handleClose = () => {
     setAnchorEl(null);
   };
@@ -91,10 +115,6 @@ const Sidebar = () => {
     navigate("/drive/files");
   };
 
-  const handleHomeClick = () => {
-    navigate("/drive");
-  };
-
   const handleSharedClick = () => {
     navigate("/drive/shared-with-me");
   };
@@ -104,7 +124,6 @@ const Sidebar = () => {
       <div
         className="flex-col mt-10 cursor-pointer"
         style={{ display: "flex", alignItems: "center", marginBottom: "20px" }}
-        onClick={handleHomeClick}
       >
         <img src="/images/logo.png" alt="Drive Logo" height={100} width={100} />
         <h5 style={{ marginLeft: "10px" }} className="poppins-light">
@@ -168,18 +187,6 @@ const Sidebar = () => {
 
       <div style={{ marginBottom: "20px" }}>
         <Button
-          className="main-dashboard"
-          startIcon={<HomeIcon />}
-          onClick={handleHomeClick}
-          style={{
-            justifyContent: "flex-start",
-            width: "100%",
-            color: "black",
-          }}
-        >
-          Home
-        </Button>
-        <Button
           className="myDrive"
           startIcon={<DescriptionIcon />}
           onClick={handleMyDriveClick}
@@ -206,7 +213,7 @@ const Sidebar = () => {
       </div>
 
       <Divider />
-      <div className="totalSpace" style={{ padding: "10px 0" }}>
+      <div className="totalspace" style={{ padding: "10px 0" }}>
         <Button
           startIcon={<CloudQueueIcon />}
           style={{
@@ -228,25 +235,7 @@ const Sidebar = () => {
             {`${(totalSize / (1024 * 1024)).toFixed(2)} MB of 15 GB used`}
           </Typography>
         </div>
-        <div
-          style={{
-            height: "5px",
-            backgroundColor: "#e0e0e0",
-            borderRadius: "3px",
-            overflow: "hidden",
-          }}
-        >
-          <div
-            style={{
-              width: `${Math.max(
-                (totalSize / (15 * 1024 * 1024 * 1024)) * 100,
-                1
-              )}%`,
-              height: "100%",
-              backgroundColor: "#1a73e8",
-            }}
-          ></div>
-        </div>
+        <StorageProgressBar totalSize={totalSize} />
       </div>
     </div>
   );
