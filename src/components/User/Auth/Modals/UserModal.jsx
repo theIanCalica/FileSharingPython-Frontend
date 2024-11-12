@@ -29,7 +29,11 @@ const ChangePassword = ({ onClose, fileId }) => {
         onClose();
       })
       .catch((error) => {
-        notifyError("Something went wrong");
+        const errorMessage =
+          error.response && error.response.data
+            ? error.response.data.error || "Something went wrong"
+            : "Something went wrong";
+        notifyError(errorMessage);
         console.log(error);
       });
   };

@@ -101,9 +101,13 @@ const Sidebar = () => {
       });
 
       notifySuccess("File(s) uploaded successfully!", response.data);
-      fetchTotalSize(); // Refresh total size after upload
+      fetchTotalSize(); // Refresh files list after upload
     } catch (error) {
-      notifyError("Something went wrong");
+      const errorMessage =
+        error.response && error.response.data
+          ? error.response.data.error || "Something went wrong"
+          : "Something went wrong";
+      notifyError(errorMessage);
       console.error(error.message);
     } finally {
       setUploading(false);
