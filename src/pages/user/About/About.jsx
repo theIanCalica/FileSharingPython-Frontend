@@ -107,7 +107,7 @@ const About = () => {
           },
           {
             name: "Hanna Mae D. Bernolia",
-            role: "Frontend Developer",
+            role: "Documentation",
             img: "/images/hanna.jpg",
           },
           {
