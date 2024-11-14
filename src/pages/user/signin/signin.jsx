@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import {
@@ -12,12 +12,49 @@ import { useNavigate } from "react-router-dom";
 
 const SignIn = () => {
   const navigate = useNavigate();
+  const [failedAttempts, setFailedAttempts] = useState(0);
+  const [cooldown, setCooldown] = useState(0); // in seconds
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors, touchedFields },
   } = useForm({ mode: "onChange" });
+
+  useEffect(() => {
+    const storedCooldown = parseInt(localStorage.getItem("cooldownTime"), 10);
+    const cooldownStartTime = parseInt(
+      localStorage.getItem("cooldownStartTime"),
+      10
+    );
+
+    if (storedCooldown && cooldownStartTime) {
+      const elapsed = Math.floor((Date.now() - cooldownStartTime) / 1000);
+      const remainingCooldown = Math.max(0, storedCooldown - elapsed);
+
+      if (remainingCooldown > 0) {
+        setCooldown(remainingCooldown);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    let timer;
+    if (cooldown > 0) {
+      timer = setInterval(() => {
+        setCooldown((prev) => {
+          if (prev <= 1) {
+            clearInterval(timer);
+            localStorage.removeItem("cooldownTime");
+            localStorage.removeItem("cooldownStartTime");
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+    return () => clearInterval(timer);
+  }, [cooldown]);
 
   const onValid = async (data) => {
     try {
@@ -28,6 +65,9 @@ const SignIn = () => {
       notifySuccess("Sign-in successful!");
       reset();
       authenticate(response.data);
+      setFailedAttempts(0); // Reset failed attempts on success
+      localStorage.removeItem("cooldownTime");
+      localStorage.removeItem("cooldownStartTime");
 
       if (user.is_superuser) {
         navigate("/admin");
@@ -35,16 +75,23 @@ const SignIn = () => {
         navigate("/drive/files");
       }
     } catch (error) {
-      if (error.response) {
-        const message = error.response.data[0];
-        notifyError(message);
+      setFailedAttempts((prev) => prev + 1);
+      if (failedAttempts + 1 >= 3) {
+        const newCooldown = cooldown === 0 ? 60 : cooldown * 2;
+        setCooldown(newCooldown);
+        localStorage.setItem("cooldownTime", newCooldown);
+        localStorage.setItem("cooldownStartTime", Date.now().toString());
+        setFailedAttempts(0); // Reset failed attempts after reaching limit
+        notifyError(
+          "Too many failed attempts. Please wait before trying again."
+        );
       } else {
         notifyError("Sign-in failed. Please check your credentials.");
       }
     }
   };
 
-  const onInvalid = (errors) => {
+  const onInvalid = () => {
     notifyError("Please fix the errors before submitting.");
   };
 
@@ -81,6 +128,7 @@ const SignIn = () => {
                 touchedFields
               )} focus:outline-none`}
               {...register("username", { required: "Username is required" })}
+              disabled={cooldown > 0}
             />
             {errors.username && (
               <p className="text-red-500 text-sm">{errors.username.message}</p>
@@ -107,6 +155,7 @@ const SignIn = () => {
                   message: "Password must be at least 8 characters long",
                 },
               })}
+              disabled={cooldown > 0}
             />
             {errors.password && (
               <p className="text-red-500 text-sm">{errors.password.message}</p>
@@ -125,8 +174,9 @@ const SignIn = () => {
           <button
             type="submit"
             className="w-full py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none"
+            disabled={cooldown > 0}
           >
-            Sign In
+            {cooldown > 0 ? `Try again in ${cooldown}s` : "Sign In"}
           </button>
 
           <p className="text-sm text-gray-600 mt-4 text-center">
