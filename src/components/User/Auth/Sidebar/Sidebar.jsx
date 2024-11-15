@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Button, Divider, Typography, Menu, MenuItem } from "@mui/material";
-import HomeIcon from "@mui/icons-material/Home";
 import DescriptionIcon from "@mui/icons-material/Description";
 import PeopleIcon from "@mui/icons-material/People";
 import CloudQueueIcon from "@mui/icons-material/CloudQueue";
@@ -8,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import client from "../../../../utils/client";
 import { notifyError, notifySuccess } from "../../../../utils/Helpers";
 import ProgressBar from "@ramonak/react-progress-bar";
+import FolderSharedIcon from "@mui/icons-material/FolderShared";
 
 const Sidebar = () => {
   const [progress, setProgress] = useState(0);
@@ -123,6 +123,10 @@ const Sidebar = () => {
     navigate("/drive/shared-with-me");
   };
 
+  const handleMySharedFilesClick = () => {
+    navigate("/drive/my-shared-files");
+  };
+
   return (
     <div style={{ width: "250px", padding: "10px" }} className="sidebar">
       <div
@@ -201,6 +205,18 @@ const Sidebar = () => {
           }}
         >
           My Drive
+        </Button>
+        <Button
+          className="shared"
+          startIcon={<FolderSharedIcon />}
+          onClick={handleMySharedFilesClick}
+          style={{
+            justifyContent: "flex-start",
+            width: "100%",
+            color: "black",
+          }}
+        >
+          My Shared Files
         </Button>
         <Button
           className="shared"

@@ -18,6 +18,8 @@ import AuthFiles from "./pages/user/Auth/Files";
 import AuthProfile from "./pages/user/Auth/Profile";
 import AuthSharedPage from "./pages/user/Auth/Shared";
 import AuthSearch from "./pages/user/Auth/Search";
+import AuthMySharedFiles from "./pages/user/Auth/OwnShared";
+
 // Layouts and pages for admin
 import AdminLayout from "./components/Admin/Layout";
 import AdminHomePage from "./pages/admin/index";
@@ -72,6 +74,10 @@ function App() {
           <Route
             path="shared-with-me"
             element={<ProtectedRoute element={<AuthSharedPage />} />}
+          />
+          <Route
+            path="my-shared-files"
+            element={<ProtectedRoute element={<AuthMySharedFiles />} />}
           />
         </Route>
         {/* Routes for admin */}
