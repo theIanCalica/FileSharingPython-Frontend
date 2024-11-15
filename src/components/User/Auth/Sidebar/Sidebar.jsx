@@ -8,6 +8,7 @@ import client from "../../../../utils/client";
 import { notifyError, notifySuccess } from "../../../../utils/Helpers";
 import ProgressBar from "@ramonak/react-progress-bar";
 import FolderSharedIcon from "@mui/icons-material/FolderShared";
+import MenuIcon from "@mui/icons-material/Menu"; // Importing Menu icon
 
 const Sidebar = () => {
   const [progress, setProgress] = useState(0);
@@ -17,6 +18,7 @@ const Sidebar = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const fileInputRef = useRef(null);
   const formRef = useRef(null);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true); // Sidebar visibility state
 
   const fetchTotalSize = async () => {
     try {
@@ -127,136 +129,174 @@ const Sidebar = () => {
     navigate("/drive/my-shared-files");
   };
 
-  return (
-    <div style={{ width: "250px", padding: "10px" }} className="sidebar">
-      <div
-        className="flex-col mt-10 cursor-pointer"
-        style={{ display: "flex", alignItems: "center", marginBottom: "20px" }}
-      >
-        <img src="/images/logo.png" alt="Drive Logo" height={100} width={100} />
-        <h5 style={{ marginLeft: "10px" }} className="poppins-light">
-          FileGuard
-        </h5>
-      </div>
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen); // Toggle sidebar visibility
+  };
 
+  return (
+    <div
+      style={{
+        width: isSidebarOpen ? "250px" : "0", // Conditionally show sidebar based on state
+        padding: "10px",
+        transition: "width 0.3s", // Smooth transition for sidebar toggle
+      }}
+      className="sidebar"
+    >
+      {/* Mobile menu icon */}
       <Button
-        className="new"
-        variant="contained"
+        onClick={toggleSidebar}
         style={{
+          display: "block",
+          marginBottom: "20px",
           backgroundColor: "#5A6AFF",
           color: "white",
-          boxShadow: "0px 1px 3px rgba(0, 0, 0, 0.2)",
-          marginBottom: "20px",
-          textTransform: "none",
         }}
-        onClick={handleClick}
       >
-        + New
+        <MenuIcon />
       </Button>
 
-      <Menu
-        anchorEl={anchorEl}
-        open={Boolean(anchorEl)}
-        onClose={handleClose}
-        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
-        transformOrigin={{ vertical: "top", horizontal: "left" }}
-      >
-        <MenuItem onClick={() => handleMenuOptionClick("Upload File")}>
-          Upload File
-        </MenuItem>
-      </Menu>
-
-      <form
-        ref={formRef}
-        onSubmit={(e) => e.preventDefault()}
-        encType="multipart/form-data"
-      >
-        <input
-          type="file"
-          multiple
-          ref={fileInputRef}
-          style={{ display: "none" }}
-          onChange={handleFileChange}
-        />
-      </form>
-
-      {uploading && (
-        <div style={{ marginBottom: "20px" }}>
-          <ProgressBar
-            completed={progress}
-            height="20px"
-            bgColor={progress < 50 ? "#ffcc00" : "#4caf50"}
-          />
-          <Typography variant="body2" style={{ textAlign: "center" }}>
-            {progress < 50 ? "Encrypting the file..." : "Uploading..."}
-          </Typography>
-        </div>
-      )}
-
-      <div style={{ marginBottom: "20px" }}>
-        <Button
-          className="myDrive"
-          startIcon={<DescriptionIcon />}
-          onClick={handleMyDriveClick}
-          style={{
-            justifyContent: "flex-start",
-            width: "100%",
-            color: "black",
-          }}
-        >
-          My Drive
-        </Button>
-        <Button
-          className="shared"
-          startIcon={<FolderSharedIcon />}
-          onClick={handleMySharedFilesClick}
-          style={{
-            justifyContent: "flex-start",
-            width: "100%",
-            color: "black",
-          }}
-        >
-          My Shared Files
-        </Button>
-        <Button
-          className="shared"
-          startIcon={<PeopleIcon />}
-          onClick={handleSharedClick}
-          style={{
-            justifyContent: "flex-start",
-            width: "100%",
-            color: "black",
-          }}
-        >
-          Shared with me
-        </Button>
-      </div>
-
-      <Divider />
-      <div className="totalspace" style={{ padding: "10px 0" }}>
-        <Button
-          startIcon={<CloudQueueIcon />}
-          style={{
-            justifyContent: "flex-start",
-            width: "100%",
-            color: "black",
-          }}
-        >
-          Storage
-        </Button>
-        <div style={{ padding: "5px 0" }}>
-          <Typography
-            variant="body2"
+      {/* Sidebar content */}
+      {isSidebarOpen && (
+        <div>
+          <div
+            className="flex-col mt-10 cursor-pointer"
             style={{
-              color: "#808080", // Custom color for total space text
-              paddingTop: "5px",
+              display: "flex",
+              alignItems: "center",
+              marginBottom: "20px",
             }}
           >
-            {`${(totalSize / (1024 * 1024)).toFixed(2)} MB of 15 GB used`}
-          </Typography>
+            <img
+              src="/images/logo.png"
+              alt="Drive Logo"
+              height={100}
+              width={100}
+            />
+            <h5 style={{ marginLeft: "10px" }} className="poppins-light">
+              FileGuard
+            </h5>
+          </div>
+
+          <Button
+            className="new"
+            variant="contained"
+            style={{
+              backgroundColor: "#5A6AFF",
+              color: "white",
+              boxShadow: "0px 1px 3px rgba(0, 0, 0, 0.2)",
+              marginBottom: "20px",
+              textTransform: "none",
+            }}
+            onClick={handleClick}
+          >
+            + New
+          </Button>
+
+          <Menu
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl)}
+            onClose={handleClose}
+            anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+            transformOrigin={{ vertical: "top", horizontal: "left" }}
+          >
+            <MenuItem onClick={() => handleMenuOptionClick("Upload File")}>
+              Upload File
+            </MenuItem>
+          </Menu>
+
+          <form
+            ref={formRef}
+            onSubmit={(e) => e.preventDefault()}
+            encType="multipart/form-data"
+          >
+            <input
+              type="file"
+              multiple
+              ref={fileInputRef}
+              style={{ display: "none" }}
+              onChange={handleFileChange}
+            />
+          </form>
+
+          {uploading && (
+            <div style={{ marginBottom: "20px" }}>
+              <ProgressBar
+                completed={progress}
+                height="20px"
+                bgColor={progress < 50 ? "#ffcc00" : "#4caf50"}
+              />
+              <Typography variant="body2" style={{ textAlign: "center" }}>
+                {progress < 50 ? "Encrypting the file..." : "Uploading..."}
+              </Typography>
+            </div>
+          )}
+
+          <div style={{ marginBottom: "20px" }}>
+            <Button
+              className="myDrive"
+              startIcon={<DescriptionIcon />}
+              onClick={handleMyDriveClick}
+              style={{
+                justifyContent: "flex-start",
+                width: "100%",
+                color: "black",
+              }}
+            >
+              My Drive
+            </Button>
+            <Button
+              className="shared"
+              startIcon={<FolderSharedIcon />}
+              onClick={handleMySharedFilesClick}
+              style={{
+                justifyContent: "flex-start",
+                width: "100%",
+                color: "black",
+              }}
+            >
+              My Shared Files
+            </Button>
+            <Button
+              className="shared"
+              startIcon={<PeopleIcon />}
+              onClick={handleSharedClick}
+              style={{
+                justifyContent: "flex-start",
+                width: "100%",
+                color: "black",
+              }}
+            >
+              Shared with me
+            </Button>
+          </div>
+
+          <Divider />
+          <div className="totalspace" style={{ padding: "10px 0" }}>
+            <Button
+              startIcon={<CloudQueueIcon />}
+              style={{
+                justifyContent: "flex-start",
+                width: "100%",
+                color: "black",
+              }}
+            >
+              Storage
+            </Button>
+            <div style={{ padding: "5px 0" }}>
+              <Typography
+                variant="body2"
+                style={{
+                  color: "#808080", // Custom color for total space text
+                  paddingTop: "5px",
+                }}
+              >
+                {`${(totalSize / (1024 * 1024)).toFixed(2)} MB of 15 GB used`}
+              </Typography>
+            </div>
+            <StorageProgressBar totalSize={totalSize} />
+          </div>
         </div>
-        <StorageProgressBar totalSize={totalSize} />
-      </div>
+      )}
     </div>
   );
 };
