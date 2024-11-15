@@ -22,12 +22,9 @@ const refreshAccessToken = async () => {
   if (refreshToken) {
     const cleanedToken = refreshToken.replace(/^["']|["']$/g, "");
     try {
-      const response = await axios.post(
-        `${process.env.REACT_APP_API_LINK}/token/refresh/`,
-        {
-          refresh: cleanedToken,
-        }
-      );
+      const response = await axios.post(`/token/refresh/`, {
+        refresh: cleanedToken,
+      });
 
       // Save new tokens
       const { access } = response.data; // Adjust based on your API response structure
